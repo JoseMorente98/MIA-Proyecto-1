@@ -16,7 +16,11 @@ func ComandoExec(strComando string) {
 			case 0:
 				comando = arregloComando[0]
 			case 1:
-				ubicacion = arregloComando[1]
+				contadorComilla := strings.Count(arregloComando[1], "\"")
+				contadorIgual := strings.Count(arregloComando[1], "=")
+				removerComilla := strings.Replace(arregloComando[1], "\"", "", contadorComilla)
+				removerIgual := strings.Replace(removerComilla, "=", " ", contadorIgual)
+				ubicacion = removerIgual
 		}
 	}
 

@@ -6,7 +6,8 @@ import (
 	"os"
 	"bufio"
 	
-	//ComandoControlador "../ComandoControlador"
+	ComandoControlador "../ComandoControlador"
+	Espacio "../../Utilidades/Espacio"
 )
 
 /**
@@ -35,7 +36,7 @@ func Interprete() {
 		} else {
 			if strComando != "" {
 				if strings.Contains(strComando, "/*") {
-					remover := strings.Replace(strComando, "/*", "", 1) 
+					remover := strings.Replace(strComando, "/*", "", 1)
 					comando += strings.TrimRight(remover, "\n")
 				} else {
 					if comando != "" {
@@ -59,12 +60,12 @@ func Interprete() {
  */
 func LineaComando(strEntrada string) {
 	var arregloComando []string
-	arregloComando = strings.Split(strEntrada, " ")
+	arregloComando = strings.Split(Espacio.RemoverEspacioPath(strEntrada), " ")
 
 	var strComando = strings.ToLower(arregloComando[0])
 
 	if(strings.TrimRight(strComando, "\n") == "exec") {
-		ComandoControlador.ComandoExec(arregloComando);
+		ComandoControlador.ComandoExec(arregloComando[1]);
 	}
 	if(strings.TrimRight(strComando, "\n") == "mkdisk") {
 		fmt.Println(strComando)
@@ -80,5 +81,11 @@ func LineaComando(strEntrada string) {
 	}
 	if(strings.TrimRight(strComando, "\n") == "unmount") {
 		fmt.Println(strComando)
+	}
+	if(strings.TrimRight(strComando, "\n") == "pause") {
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("  Presione 'Enter' para continuar...")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+    	bufio.NewReader(os.Stdin).ReadBytes('\n') 
 	}
 }
