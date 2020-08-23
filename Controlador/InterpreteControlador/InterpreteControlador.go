@@ -5,8 +5,13 @@ import (
 	"strings"
 	"os"
 	"bufio"
+	
+	//ComandoControlador "../ComandoControlador"
 )
 
+/**
+ * FUNCION INTERPRETE
+ */
 func Interprete() {
 	finalizar := 0
 	inicio := "╔══════════════════════════════════════════════════╗\n"
@@ -14,8 +19,11 @@ func Interprete() {
 	inicio += "  MANEJO E IMPLEMENTACIÓN DE ARCHIVOS A-\n"
 	inicio += "  JOSÉ RAFAEL MORENTE GONZÁLEZ\n"
 	inicio += "  201801237\n"
+	inicio += "╠══════════════════════════════════════════════════╣\n"
+	inicio += "  Escriba SALIR para finalizar.\n"
 	inicio += "╚══════════════════════════════════════════════════╝"
 	fmt.Println(inicio)
+	var comando string = "";
 
 	for finalizar != 1 {
 		lecturaBuffer := bufio.NewReader(os.Stdin)
@@ -26,32 +34,51 @@ func Interprete() {
 			finalizar = 1
 		} else {
 			if strComando != "" {
-				LineaComando(strComando)
+				if strings.Contains(strComando, "/*") {
+					remover := strings.Replace(strComando, "/*", "", 1) 
+					comando += strings.TrimRight(remover, "\n")
+				} else {
+					if comando != "" {
+						comando += strComando
+						//fmt.Print("COMANDO: " + comando)
+						LineaComando(comando)
+						comando = ""
+					} else {
+						//fmt.Print("COMANDO NUEVO: " + strComando)
+						LineaComando(strComando)
+					}
+				}
+
 			}
 		}
 	}
-    
 }
 
+/**
+ * FUNCION LINEA DE COMANDO
+ */
 func LineaComando(strEntrada string) {
 	var arregloComando []string
 	arregloComando = strings.Split(strEntrada, " ")
 
 	var strComando = strings.ToLower(arregloComando[0])
 
-	fmt.Println("comando" + strComando)
-	switch strings.TrimRight(strComando, "\n") {
-		case "exec":
-			fmt.Println(strComando)
-		case "mkdisk":
-			fmt.Println(strComando)
-		case "rmdisk":
-			fmt.Println(strComando)
-		case "fdisk":
-			fmt.Println(strComando)
-		case "mount":
-			fmt.Println(strComando)
-		case "unmount":
-			fmt.Println(strComando)
+	if(strings.TrimRight(strComando, "\n") == "exec") {
+		ComandoControlador.ComandoExec(arregloComando);
+	}
+	if(strings.TrimRight(strComando, "\n") == "mkdisk") {
+		fmt.Println(strComando)
+	}
+	if(strings.TrimRight(strComando, "\n") == "rmdisk") {
+		fmt.Println(strComando)
+	}
+	if(strings.TrimRight(strComando, "\n") == "fdisk") {
+		fmt.Println(strComando)
+	}
+	if(strings.TrimRight(strComando, "\n") == "mount") {
+		fmt.Println(strComando)
+	}
+	if(strings.TrimRight(strComando, "\n") == "unmount") {
+		fmt.Println(strComando)
 	}
 }

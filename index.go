@@ -1,9 +1,9 @@
 package main
 
 import (
-	INTERPRETE "./Controlador/InterpreteControlador"
+	InterpreteControlador "./Controlador/InterpreteControlador"
 )
 
 func main() {
-	INTERPRETE.Interprete()
+	InterpreteControlador.Interprete()
 }
