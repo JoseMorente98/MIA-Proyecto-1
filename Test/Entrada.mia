@@ -1,2 +1,25 @@
-exec -path->/home/jmorente/Documentos/Míaabc
-exec -path->"/home/jmorente/Documentos/Manejo e Implementaciósán de Archivos"
+exec -path->/home/jmorente/Documentos/MIA
+exec -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos"
+
+Mkdisk -size->16 -path->/home/mis discos/ -NaMe->Disco4.dsk
+Mkdisk -path->/home/mis discos/ -size->16  -NaMe->Disco4.dsk
+Mkdisk -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos" -NaMe->Disco4.dsk -size->16 
+
+RMDISK -path->/home/jmorente/Documentos/MIA
+rMDisk -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos"
+
+
+Fdisk -sizE->72 -path->/home/Disco1.dsk -name->Particion1
+Fdisk -sizE->72 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos" -name->Particion1
+fdisk -TyPE->E -path->/home/Disco2.dsk -Unit->K \*
+-name->Particion2 -sizE->56
+fdisk -sizE->1 -tipo->L -unit->M -fit->BF \*
+-path->/mis discos/Disco3.dsk -name->Particion3
+
+mount -path->/home/Disco1.dsk -name->Part1 #id->vda1
+mount -path->/home/Disco2.dsk -name->Part1 #id->vdb1
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos" -name->Part1 #id->vdb1
+
+unmount -id1->vda1
+unmount -id1->vdx1
+unmount -id1->vda1 -id2->vdb2 -id3->vdc1

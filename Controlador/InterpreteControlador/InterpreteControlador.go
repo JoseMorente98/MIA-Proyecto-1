@@ -35,18 +35,20 @@ func Interprete() {
 			finalizar = 1
 		} else {
 			if strComando != "" {
-				if strings.Contains(strComando, "/*") {
-					remover := strings.Replace(strComando, "/*", "", 1)
+				if strings.Contains(strComando, "\\*") {
+					remover := strings.Replace(strComando, "\\*", "", 1)
 					comando += strings.TrimRight(remover, "\n")
 				} else {
 					if comando != "" {
-						comando += strComando
+						comandoTrim := strings.TrimRight(strComando, "\n")
+						comando += comandoTrim
 						//fmt.Print("COMANDO: " + comando)
 						LineaComando(comando)
 						comando = ""
 					} else {
 						//fmt.Print("COMANDO NUEVO: " + strComando)
-						LineaComando(strComando)
+						comando := strings.TrimRight(strComando, "\n")
+						LineaComando(comando)
 					}
 				}
 
@@ -65,22 +67,22 @@ func LineaComando(strEntrada string) {
 	var strComando = strings.ToLower(arregloComando[0])
 
 	if(strings.TrimRight(strComando, "\n") == "exec") {
-		ComandoControlador.ComandoExec(arregloComando[1]);
+		ComandoControlador.ComandoEXEC(arregloComando)
 	}
 	if(strings.TrimRight(strComando, "\n") == "mkdisk") {
-		fmt.Println(strComando)
+		ComandoControlador.ComandoMKDISK(arregloComando)
 	}
 	if(strings.TrimRight(strComando, "\n") == "rmdisk") {
-		fmt.Println(strComando)
+		ComandoControlador.ComandoRMDISK(arregloComando)
 	}
 	if(strings.TrimRight(strComando, "\n") == "fdisk") {
-		fmt.Println(strComando)
+		ComandoControlador.ComandoFDISK(arregloComando)
 	}
 	if(strings.TrimRight(strComando, "\n") == "mount") {
-		fmt.Println(strComando)
+		ComandoControlador.ComandoMOUNT(arregloComando)
 	}
 	if(strings.TrimRight(strComando, "\n") == "unmount") {
-		fmt.Println(strComando)
+		ComandoControlador.ComandoUNMOUNT(arregloComando)
 	}
 	if(strings.TrimRight(strComando, "\n") == "pause") {
 		fmt.Println("╔══════════════════════════════════════════════════╗")
