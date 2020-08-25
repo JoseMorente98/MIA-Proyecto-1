@@ -6,26 +6,6 @@ import (
 )
 
 /**
- * FUNCION COMANDO EXEC
- */
-func ComandoEXEC(strComando []string) {
-	path := "";
-	for i := 1; i < len(strComando); i++ {
-		var arregloComando = strings.Split(strComando[i], "->")
-		var strParametro string = strings.ToLower(arregloComando[0])
-		switch strParametro {
-		case "-path":
-			contadorComilla := strings.Count(arregloComando[1], "\"")
-			contadorIgual := strings.Count(arregloComando[1], "=")
-			removerComilla := strings.Replace(arregloComando[1], "\"", "", contadorComilla)
-			removerIgual := strings.Replace(removerComilla, "=", " ", contadorIgual)
-			path = removerIgual
-		}
-	}
-	fmt.Println("PATH " + path);
-}
-
-/**
  * FUNCION COMANDO MKDISK
  */
 func ComandoMKDISK(strComando []string) {

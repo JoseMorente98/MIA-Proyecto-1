@@ -5,6 +5,7 @@ import (
 	"strings"
 	"os"
 	"bufio"
+  	"log"
 	
 	ComandoControlador "../ComandoControlador"
 	Espacio "../../Utilidades/Espacio"
@@ -66,28 +67,103 @@ func LineaComando(strEntrada string) {
 
 	var strComando = strings.ToLower(arregloComando[0])
 
-	if(strings.TrimRight(strComando, "\n") == "exec") {
-		ComandoControlador.ComandoEXEC(arregloComando)
-	}
-	if(strings.TrimRight(strComando, "\n") == "mkdisk") {
-		ComandoControlador.ComandoMKDISK(arregloComando)
-	}
-	if(strings.TrimRight(strComando, "\n") == "rmdisk") {
-		ComandoControlador.ComandoRMDISK(arregloComando)
-	}
-	if(strings.TrimRight(strComando, "\n") == "fdisk") {
-		ComandoControlador.ComandoFDISK(arregloComando)
-	}
-	if(strings.TrimRight(strComando, "\n") == "mount") {
-		ComandoControlador.ComandoMOUNT(arregloComando)
-	}
-	if(strings.TrimRight(strComando, "\n") == "unmount") {
-		ComandoControlador.ComandoUNMOUNT(arregloComando)
-	}
-	if(strings.TrimRight(strComando, "\n") == "pause") {
+	switch strings.TrimRight(strComando, "\n") {
+	case "exec":
 		fmt.Println("╔══════════════════════════════════════════════════╗")
-		fmt.Println("  Presione 'Enter' para continuar...")
+		fmt.Println("                      EXEC")
 		fmt.Println("╚══════════════════════════════════════════════════╝")
-    	bufio.NewReader(os.Stdin).ReadBytes('\n') 
+		ComandoEXEC(arregloComando)
+	case "mkdisk":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                      MKDISK")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoMKDISK(arregloComando)
+	case "rmdisk":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     RMDISK")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoRMDISK(arregloComando)
+	case "fdisk":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                      FDISK")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoFDISK(arregloComando)
+	case "mount":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                      MOUNT")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoMOUNT(arregloComando)
+	case "unmount":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     UNMOUNT")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoUNMOUNT(arregloComando)
+	case "pause":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("  PRESIONE 'ENTER' PARA CONTINUAR...")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+    	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	default:
+		if !strings.Contains(strComando, "#") {
+			fmt.Println("╔══════════════════════════════════════════════════╗")
+			fmt.Println("  COMANDO NO SOPORTADO")
+			fmt.Println("╚══════════════════════════════════════════════════╝")
+		}
+	}
+}
+
+
+/**
+ * FUNCION COMANDO EXEC
+ */
+ func ComandoEXEC(strComando []string) {
+	path := "";
+	for i := 1; i < len(strComando); i++ {
+		var arregloComando = strings.Split(strComando[i], "->")
+		var strParametro string = strings.ToLower(arregloComando[0])
+		switch strParametro {
+		case "-path":
+			contadorComilla := strings.Count(arregloComando[1], "\"")
+			contadorIgual := strings.Count(arregloComando[1], "=")
+			removerComilla := strings.Replace(arregloComando[1], "\"", "", contadorComilla)
+			removerIgual := strings.Replace(removerComilla, "=", " ", contadorIgual)
+			path = removerIgual
+		}
+	}
+	fmt.Println("PATH " + path);
+	//LEER ARCHIVO
+	LeerArchivo(path);
+}
+
+
+func LeerArchivo(ubicacion string) {
+	file, err := os.Open(ubicacion)
+	if err != nil {
+	  log.Fatal(err)
+	  fmt.Println("HA ocurrido un error");
+	}
+
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	var comando string = "";
+	for scanner.Scan() {
+	  fmt.Println(scanner.Text())
+	  strComando := scanner.Text()
+	  	if strComando != "" {
+			if strings.Contains(strComando, "\\*") {
+				remover := strings.Replace(strComando, "\\*", "", 1)
+				comando += strings.TrimRight(remover, "\n")
+			} else {
+				if comando != "" {
+					comandoTrim := strings.TrimRight(strComando, "\n")
+					comando += comandoTrim
+					LineaComando(comando)
+					comando = ""
+				} else {
+					comando := strings.TrimRight(strComando, "\n")
+					LineaComando(comando)
+				}
+			}
+		}
 	}
 }
