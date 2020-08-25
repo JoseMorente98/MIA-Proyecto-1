@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	MBRControlador "../MBRControlador"
-
+	RMDISKControlador "../RMDISKControlador"
 )
 
 /**
@@ -35,11 +35,6 @@ func ComandoMKDISK(strComando []string) {
 		}
 	}
 
-	fmt.Println("SIZE " + size);
-	fmt.Println("PATH " + path);
-	fmt.Println("NAME " +name);
-	fmt.Println("UNIT " + unit);
-
 	MBRControlador.MKDISK(size, path, name, unit);
 }
 
@@ -61,6 +56,8 @@ func ComandoRMDISK(strComando []string) {
 		}
 	}
 	fmt.Println("PATH " + path);
+
+	RMDISKControlador.RMDISK(path);
 }
 
 /**

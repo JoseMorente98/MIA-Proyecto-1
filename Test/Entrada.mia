@@ -5,8 +5,8 @@ Mkdisk -size->16 -path->/home/mis discos/ -NaMe->Disco4.dsk
 Mkdisk -path->/home/mis discos/ -size->16  -NaMe->Disco4.dsk
 Mkdisk -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/" -NaMe->Disco4.dsk -size->16 
 
-RMDISK -path->/home/jmorente/Documentos/MIA
-rMDisk -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos"
+RMDISK -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/MBR/Disco_1.dsk"
+rMDisk -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/"
 
 
 Fdisk -sizE->72 -path->/home/Disco1.dsk -name->Particion1
