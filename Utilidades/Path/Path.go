@@ -1,20 +1,25 @@
 package Path
 
 import (
-	"fmt"
 	"os"
+	"github.com/fatih/color"
 )
 
 /**
  * FUNCION LINEA DE COMANDO
  */
-func CrearDirectorio(ubicacion string) {
+func CrearDirectorio(ubicacion string) string {
 	if _, err := os.Stat(ubicacion); os.IsNotExist(err) {
 		err := os.Mkdir(ubicacion, 0755)
 		if err != nil {
-			fmt.Println("Ha ocurrido un error D:", err)
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("  Ha ocurrido un error creando el directorio D:")
+			color.Red("╚══════════════════════════════════════════════════╝")
 		} else {
-			fmt.Println("Ha creado un directorio exitosamente :D")
+			color.Green("╔══════════════════════════════════════════════════╗")
+			color.Green("  Ha creado un directorio exitosamente :D")
+			color.Green("╚══════════════════════════════════════════════════╝")
 		}
 	}
+	return ubicacion;
 }

@@ -3,6 +3,9 @@ package ComandoControlador
 import (
 	"fmt"
 	"strings"
+
+	MBRControlador "../MBRControlador"
+
 )
 
 /**
@@ -36,6 +39,8 @@ func ComandoMKDISK(strComando []string) {
 	fmt.Println("PATH " + path);
 	fmt.Println("NAME " +name);
 	fmt.Println("UNIT " + unit);
+
+	MBRControlador.MKDISK(size, path, name, unit);
 }
 
 /**

@@ -5,7 +5,8 @@ import (
 	"strings"
 	"os"
 	"bufio"
-  	"log"
+	"log"
+	"github.com/fatih/color"
 	
 	ComandoControlador "../ComandoControlador"
 	Espacio "../../Utilidades/Espacio"
@@ -105,9 +106,9 @@ func LineaComando(strEntrada string) {
     	bufio.NewReader(os.Stdin).ReadBytes('\n')
 	default:
 		if !strings.Contains(strComando, "#") {
-			fmt.Println("╔══════════════════════════════════════════════════╗")
-			fmt.Println("  COMANDO NO SOPORTADO")
-			fmt.Println("╚══════════════════════════════════════════════════╝")
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("  COMANDO NO SOPORTADO")
+			color.Red("╚══════════════════════════════════════════════════╝")
 		}
 	}
 }
@@ -116,7 +117,7 @@ func LineaComando(strEntrada string) {
 /**
  * FUNCION COMANDO EXEC
  */
- func ComandoEXEC(strComando []string) {
+func ComandoEXEC(strComando []string) {
 	path := "";
 	for i := 1; i < len(strComando); i++ {
 		var arregloComando = strings.Split(strComando[i], "->")
@@ -130,12 +131,12 @@ func LineaComando(strEntrada string) {
 			path = removerIgual
 		}
 	}
-	fmt.Println("PATH " + path);
-	//LEER ARCHIVO
 	LeerArchivo(path);
 }
 
-
+/**
+ * FUNCION LEER ARCHIVO
+ */
 func LeerArchivo(ubicacion string) {
 	file, err := os.Open(ubicacion)
 	if err != nil {
