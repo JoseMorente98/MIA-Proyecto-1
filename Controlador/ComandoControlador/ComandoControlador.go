@@ -6,6 +6,7 @@ import (
 
 	MBRControlador "../MBRControlador"
 	RMDISKControlador "../RMDISKControlador"
+	MOUNTControlador "../MOUNTControlador"
 )
 
 /**
@@ -55,8 +56,6 @@ func ComandoRMDISK(strComando []string) {
 			path = removerIgual
 		}
 	}
-	fmt.Println("PATH " + path);
-
 	RMDISKControlador.RMDISK(path);
 }
 
@@ -132,6 +131,7 @@ func ComandoRMDISK(strComando []string) {
 
 	fmt.Println("PATH " + path);
 	fmt.Println("NAME " +name);
+	MOUNTControlador.MOUNT(path, name);
 }
 
 /**
@@ -143,6 +143,7 @@ func ComandoRMDISK(strComando []string) {
 		var strParametro string = strings.ToLower(arregloComando[0])
 		if strings.Contains(strParametro, "-id") {
 			fmt.Println("ID: " + arregloComando[1]);
+			MOUNTControlador.UNMOUNT(arregloComando[1]);
 		}
 	}
 }

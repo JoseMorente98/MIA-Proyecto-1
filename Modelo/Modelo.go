@@ -29,3 +29,11 @@ type MBR struct {
 	mbr_partition_4			PARTICION
 }
 
+/**
+ * MOUNT 
+ */
+type MOUNT struct {
+	Mount_id 				string
+	Mount_path 				string
+	Mount_particion   		string
+}

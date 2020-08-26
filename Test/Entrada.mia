@@ -16,7 +16,12 @@ fdisk -TyPE->E -path->/home/Disco2.dsk -Unit->K \*
 fdisk -sizE->1 -tipo->L -unit->M -fit->BF \*
 -path->/mis discos/Disco3.dsk -name->Particion3
 
-mount -path->/home/Disco1.dsk -name->Part1 #id->vda1
+mount -path->/home/jmorente/Documentos/MIA/Entrada.mia -name->Part1 #id->vda1
+mount -path->/home/jmorente/Documentos/MIA/Entrada.mia -name->Part1 #id->vda1
+mount -path->/home/jmorente/Documentos/MIA/Entrada.mia -name->Part1 #id->vda1
+mount -path->/home/jmorente/Documentos/MIA/Entrada.mia -name->Part1 #id->vda1
+mount -path->/home/jmorente/Documentos/MIA/Entrada.mia -name->Part1 #id->vda1
+mount -path->/home/jmorente/Documentos/MIA/Entrada.mia -name->Part1 #id->vda1
 mount -path->/home/Disco2.dsk -name->Part1 #id->vdb1
 mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos" -name->Part1 #id->vdb1
 
