@@ -9,8 +9,8 @@ import (
 	"log"
 	"os"
 	"strconv"
-	//"time"
-	//"unsafe"
+	"time"
+	"math/rand"
 
 	Modelo "../../Modelo"
 	Path "../../Utilidades/Path"
@@ -87,21 +87,25 @@ func CrearArchivo(size int64, path string, name string, unit string) {
 			escrituraBytes(archivo, binaryTemp.Bytes())
 
 			//TAMAÑO DE ARCHIVO SEGUN UNIT
-			archivo.Seek(sizeUNIT, 0)
+			archivo.Seek(sizeUNIT*size, 0)
 		
 			//ESCRIBIR 0 AL FINAL DEL ARCHIVO
 			var binaryTemp2 bytes.Buffer
 			binary.Write(&binaryTemp2, binary.BigEndian, s)
 			escrituraBytes(archivo, binaryTemp2.Bytes())
 		
-			//ESCRIBIR STRUCT INICIO DE ARCHIVO
-			archivo.Seek(0, 0)
-		
 			//ASIGNAR VALORES A STRUCT
+			fechaHora := time.Now();
 			disco := Modelo.MBR{}
-			//disco.mbr_size = size;
-			//disco.mbr_date = time.Now();
+			disco.Mbr_size = size*sizeUNIT;
+			disco.Mbr_date = fechaHora.Format("2006-01-02 15:04:05");
+			disco.Mbr_disk_signature = rand.Int63();
+			disco.Mbr_partition_1 = Modelo.PARTICION{};
+			disco.Mbr_partition_2 = Modelo.PARTICION{};
+			disco.Mbr_partition_3 = Modelo.PARTICION{};
+			disco.Mbr_partition_4 = Modelo.PARTICION{};
 			fmt.Println(disco)
+			//fmt.Println(disco.Mbr_disk_signature)
 			s1 := &disco
 		
 			//ESCRITURA DEL STRUCT
@@ -121,8 +125,6 @@ func CrearArchivo(size int64, path string, name string, unit string) {
 		color.Red("  El tamaño no es permitido D:")
 		color.Red("╚══════════════════════════════════════════════════╝")
 	}
-
-	
 }
 
 /**

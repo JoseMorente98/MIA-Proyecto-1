@@ -1,32 +1,31 @@
 package Modelo
 
 import (
-	"time"
 )
 
 /**
  * PARTICION MBR
  */
 type PARTICION struct {
-	part_status				byte
-	part_type 				byte
-	part_fit				byte
-	part_start				int64
-	part_size				int64
-	part_name				string
+	Particion_status			byte
+	Particion_type 				byte
+	Particion_fit				byte
+	Particion_start				int64
+	Particion_size				int64
+	Particion_name				string
 }
 
 /**
  * MASTER BOOT RECORD
  */
 type MBR struct {
-	mbr_size				int64
-	mbr_date 				time.Time
-	mbr_disk_signature   	int64
-	mbr_partition_1			PARTICION
-	mbr_partition_2			PARTICION
-	mbr_partition_3			PARTICION
-	mbr_partition_4			PARTICION
+	Mbr_size				int64
+	Mbr_date 				string
+	Mbr_disk_signature   	int64
+	Mbr_partition_1			PARTICION
+	Mbr_partition_2			PARTICION
+	Mbr_partition_3			PARTICION
+	Mbr_partition_4			PARTICION
 }
 
 /**
