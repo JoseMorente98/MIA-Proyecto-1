@@ -4,15 +4,28 @@ import (
 )
 
 /**
+ * PARTICION EBR 
+ */
+ type EBR struct {
+	Part_status 		byte
+	Part_fit 			[2]byte
+	Part_start   		int64
+	Part_size   		int64
+	Part_name   		[16]byte
+	Part_next   		int64
+}
+
+/**
  * PARTICION MBR
  */
 type PARTICION struct {
-	Particion_status			byte
-	Particion_type 				byte
-	Particion_fit				byte
-	Particion_start				int64
-	Particion_size				int64
-	Particion_name				string
+	Part_status				byte
+	Part_type 				byte
+	Part_fit				[2]byte
+	Part_start				int64
+	Part_size				int64
+	Part_name				[16]byte
+	Part_EBR				EBR
 }
 
 /**
@@ -20,7 +33,7 @@ type PARTICION struct {
  */
 type MBR struct {
 	Mbr_size				int64
-	Mbr_date 				string
+	Mbr_date 				[19]byte
 	Mbr_disk_signature   	int64
 	Mbr_partition_1			PARTICION
 	Mbr_partition_2			PARTICION

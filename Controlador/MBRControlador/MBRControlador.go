@@ -60,7 +60,7 @@ func CrearArchivo(size int64, path string, name string, unit string) {
 	var sizeUNIT int64;
 	if size >= 1 {
 		if strings.Contains(name, ".dsk") {
-			switch unit {
+			switch strings.ToLower(unit) {
 			case "k":
 				sizeUNIT = 1024;
 			case "m":
@@ -87,26 +87,27 @@ func CrearArchivo(size int64, path string, name string, unit string) {
 			escrituraBytes(archivo, binaryTemp.Bytes())
 
 			//TAMAÑO DE ARCHIVO SEGUN UNIT
-			archivo.Seek(sizeUNIT*size, 0)
+			archivo.Seek(sizeUNIT*size-1, 0)
 		
 			//ESCRIBIR 0 AL FINAL DEL ARCHIVO
 			var binaryTemp2 bytes.Buffer
 			binary.Write(&binaryTemp2, binary.BigEndian, s)
 			escrituraBytes(archivo, binaryTemp2.Bytes())
+			archivo.Seek(0, 0)
 		
 			//ASIGNAR VALORES A STRUCT
 			fechaHora := time.Now();
 			disco := Modelo.MBR{}
-			disco.Mbr_size = size*sizeUNIT;
-			disco.Mbr_date = fechaHora.Format("2006-01-02 15:04:05");
+			disco.Mbr_size = size*sizeUNIT-1;
+			copy(disco.Mbr_date[:], fechaHora.Format("2000-01-01 00:00:01"))
 			disco.Mbr_disk_signature = rand.Int63();
 			disco.Mbr_partition_1 = Modelo.PARTICION{};
 			disco.Mbr_partition_2 = Modelo.PARTICION{};
 			disco.Mbr_partition_3 = Modelo.PARTICION{};
 			disco.Mbr_partition_4 = Modelo.PARTICION{};
 			fmt.Println(disco)
-			//fmt.Println(disco.Mbr_disk_signature)
 			s1 := &disco
+
 		
 			//ESCRITURA DEL STRUCT
 			var binaryTemp3 bytes.Buffer
