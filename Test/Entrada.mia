@@ -73,9 +73,16 @@ Fdisk -sizE->72 -path->"/home/jmorente/Documentos/Manejo e Implementación de Ar
 Fdisk -sizE->72 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest2.dsk" -name->Particion10 -TyPE->L 
 
 
+
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest.dsk" -name->Particion1
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest.dsk" -name->Particion2
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest.dsk" -name->Part1
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest.dsk" -name->Part1
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest.dsk" -name->Part1
+
 mkfs -id->vda1 -type->fast
 mkfs -id->vda1 -type->fast
-Mkfs -add->1 -id->vdc1 -unit->m
+Mkfs -add->1 -id->vdc1 -unit->ms
 
 login -usr->root -pwd->201020576 -id->vda1
 

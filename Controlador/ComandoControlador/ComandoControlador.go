@@ -8,6 +8,7 @@ import (
 	RMDISKControlador "../RMDISKControlador"
 	MOUNTControlador "../MOUNTControlador"
 	FDISKControlador "../FDISKControlador"
+	MKFSControlador "../MKFSControlador"
 )
 
 /**
@@ -168,7 +169,7 @@ func ComandoRMDISK(strComando []string) {
 	fmt.Println("TYPE " + types);
 	fmt.Println("ADD " + add);
 
-	//FDISKControlador.FDISK(size, path, name, unit, types, fit, add, delete);
+	MKFSControlador.MKFS(id, types, add, unit);
 }
 
 /**
