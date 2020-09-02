@@ -11,9 +11,9 @@ Mkdisk -size->20 -path->"/home/jmorente/Documentos/Manejo e Implementación de A
 RMDISK -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/MBR/Disco_1.dsk"
 rMDisk -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/"
 
-Mkdisk -size->20 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/" -NaMe->DiscoA.dsk
+Mkdisk -size->20 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/" -NaMe->DiscoE.dsk
 
-Fdisk -sizE->72 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoA.dsk" -name->Particion1
+Fdisk -sizE->72 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoE.dsk" -name->Particion1
 Fdisk -sizE->0 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoA.dsk" -name->Particion1
 Fdisk -sizE->-s -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoA.dsk" -name->Particion1
 Fdisk -sizE->72 -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos" -name->Particion1
