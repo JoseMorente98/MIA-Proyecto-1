@@ -103,7 +103,42 @@ func LineaComando(strEntrada string) {
 		fmt.Println("╔══════════════════════════════════════════════════╗")
 		fmt.Println("  PRESIONE 'ENTER' PARA CONTINUAR...")
 		fmt.Println("╚══════════════════════════════════════════════════╝")
-    	bufio.NewReader(os.Stdin).ReadBytes('\n')
+		bufio.NewReader(os.Stdin).ReadBytes('\n')
+	case "mkfs":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     MKFS")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoMKFS(arregloComando)
+	case "login":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     LOGIN")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoLOGIN(arregloComando)
+	case "logout":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("  PRESIONE 'ENTER' PARA CONTINUAR...")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		bufio.NewReader(os.Stdin).ReadBytes('\n')
+	case "mkgrp":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     MKGRP")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoMKGRP(arregloComando)
+	case "rmgrp":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     RMGRP")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoRMGRP(arregloComando)
+	case "mkusr":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     MKUSR")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoMKUSR(arregloComando)
+	case "rmusr":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                     RMUSR")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoRMUSR(arregloComando)
 	default:
 		if !strings.Contains(strComando, "#") {
 			color.Red("╔══════════════════════════════════════════════════╗")
