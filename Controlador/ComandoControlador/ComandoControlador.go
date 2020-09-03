@@ -9,6 +9,7 @@ import (
 	MOUNTControlador "../MOUNTControlador"
 	FDISKControlador "../FDISKControlador"
 	MKFSControlador "../MKFSControlador"
+	UsuarioControlador "../UsuarioControlador"
 )
 
 /**
@@ -196,6 +197,7 @@ func ComandoRMDISK(strComando []string) {
 	fmt.Println("USER " + user);
 	fmt.Println("PASSWORD " + password);
 	//FDISKControlador.FDISK(size, path, name, unit, types, fit, add, delete);
+	UsuarioControlador.LOGIN(user, password, id);
 }
 
 /**

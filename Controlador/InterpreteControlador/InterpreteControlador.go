@@ -9,6 +9,7 @@ import (
 	"github.com/fatih/color"
 	
 	ComandoControlador "../ComandoControlador"
+	UsuarioControlador "../UsuarioControlador"
 	Espacio "../../Utilidades/Espacio"
 )
 
@@ -116,9 +117,9 @@ func LineaComando(strEntrada string) {
 		ComandoControlador.ComandoLOGIN(arregloComando)
 	case "logout":
 		fmt.Println("╔══════════════════════════════════════════════════╗")
-		fmt.Println("  PRESIONE 'ENTER' PARA CONTINUAR...")
+		fmt.Println("                     LOGOUT")
 		fmt.Println("╚══════════════════════════════════════════════════╝")
-		bufio.NewReader(os.Stdin).ReadBytes('\n')
+		UsuarioControlador.LOGOUT();
 	case "mkgrp":
 		fmt.Println("╔══════════════════════════════════════════════════╗")
 		fmt.Println("                     MKGRP")

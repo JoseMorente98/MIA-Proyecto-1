@@ -108,7 +108,7 @@ type SUPERBOOT struct {
 /**
  * ARBOL VIRTUAL DE DIRECTORIO 
  */
- type AVD struct {
+type AVD struct {
 	Avd_fecha_creacion								[19]byte
 	Avd_nombre_directorio							[100]byte
 	Avd_ap_array_subdirectorios						byte
@@ -117,3 +117,10 @@ type SUPERBOOT struct {
 	Avd_proper										byte
 }
 
+type USUARIO struct {
+	Usuario_id       		string
+	Usuario_type     		string
+	Usuario_group    		string
+	Usuario_username 		string
+	Usuario_password 		string
+}

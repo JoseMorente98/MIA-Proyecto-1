@@ -93,3 +93,9 @@ mkgrp -id->vda1 -name->"usuarios"
 rmgrp -id->vda1 -name->"usuarios"
 
 Mkusr -id->vda1 -usr->"user1" -grp->usuarios -pwd->usuario
+
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest.dsk" -name->Particion1
+mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest.dsk" -name->Particion2
+mkfs -id->vda1 -type->fast
+login -usr->root -pwd->201801237 -id->vda1
+login -usr->root2 -pwd->201801232 -id->vda2

@@ -81,18 +81,22 @@ func AgregarMontaje(path string, name string)  {
 		if (bytes.Compare(nombre[:], m.Mbr_partition_1.Part_name[:]) == 0) {
 			if m.Mbr_partition_1.Part_type == 'P' {
 				AgregarMontajeDDP(path, name, m.Mbr_partition_1);
+				return;
 			}
 		} else if (bytes.Compare(nombre[:], m.Mbr_partition_2.Part_name[:]) == 0) {
 			if m.Mbr_partition_2.Part_type == 'P' {
 				AgregarMontajeDDP(path, name, m.Mbr_partition_2);
+				return;
 			}
 		} else if (bytes.Compare(nombre[:], m.Mbr_partition_3.Part_name[:]) == 0) {
 			if m.Mbr_partition_3.Part_type == 'P' {
 				AgregarMontajeDDP(path, name, m.Mbr_partition_3);
+				return;
 			}
 		} else if (bytes.Compare(nombre[:], m.Mbr_partition_4.Part_name[:]) == 0) {
 			if m.Mbr_partition_4.Part_type == 'P' {
 				AgregarMontajeDDP(path, name, m.Mbr_partition_4);
+				return;
 			}
 		}
 
@@ -278,6 +282,17 @@ func Buscar(id string) bool {
 		}
 	}
 	return false;
+}
+
+func BuscarMOUNT(id string) Modelo.MOUNT {
+	for i := 0; i < 100; i++ {
+		for j := 0; j < 26; j++ {
+			if(montarDiscos[i][j].Mount_id == id) {
+				return montarDiscos[i][j];
+			}
+		}
+	}
+	return Modelo.MOUNT{};
 }
 
 /**

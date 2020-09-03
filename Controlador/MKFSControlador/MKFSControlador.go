@@ -4,8 +4,8 @@ import (
 	"strings"
 	"github.com/fatih/color"
 
-	//Modelo "../../Modelo"
-	//Path "../../Utilidades/Path"
+	Modelo "../../Modelo"
+	Path "../../Utilidades/Path"
 	MOUNTControlador "../MOUNTControlador"
 )
 
@@ -61,7 +61,10 @@ func formatearParticion(unit string, types string, id string, add string)  {
 
 	
 	if (MOUNTControlador.Buscar(id) == true) {
-
+		mount := Modelo.MOUNT{};
+		mount = MOUNTControlador.BuscarMOUNT(id);
+		Path.CrearArchivo("/home/jmorente/Documentos/CodeApp GT/Archivos/" + "user" + string(mount.Mount_id[:]) + ".txt", 
+		"1,G,root\n1,U,root,root,201801237\n");
 	} else {
 		color.Red("╔══════════════════════════════════════════════════╗")
 		color.Red("     La partición no se encuentra montada D:")
