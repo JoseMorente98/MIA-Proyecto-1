@@ -28,17 +28,17 @@ func CrearDirectorio(ubicacion string) string {
 /**
  * CREAR ARCHIVO
  */
-func CrearArchivo(path string, text string) {
-	info, err := os.Stat(path)
+func CrearArchivo(ubicacion string, strCadena string) {
+	info, err := os.Stat(ubicacion)
 	if os.IsNotExist(err) {
-		file, err := os.Create(path)
+		file, err := os.Create(ubicacion)
 		defer file.Close()
 		if err != nil {
 			color.Red("╔══════════════════════════════════════════════════╗")
 			color.Red("    Ha ocurrido un error creando el archivo D:")
 			color.Red("╚══════════════════════════════════════════════════╝")
 		}
-		l, err := file.WriteString(text)
+		l, err := file.WriteString(strCadena)
 		if err != nil {
 			fmt.Println(err)
 			color.Red("╔══════════════════════════════════════════════════╗")

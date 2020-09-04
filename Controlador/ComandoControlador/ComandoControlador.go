@@ -10,6 +10,7 @@ import (
 	FDISKControlador "../FDISKControlador"
 	MKFSControlador "../MKFSControlador"
 	UsuarioControlador "../UsuarioControlador"
+	ReporteControlador "../ReporteControlador"
 )
 
 /**
@@ -294,5 +295,35 @@ func ComandoRMDISK(strComando []string) {
 
 	fmt.Println("ID " + id);
 	fmt.Println("USER " + user);
+	//FDISKControlador.FDISK(size, path, name, unit, types, fit, add, delete);
+}
+
+/**
+ * FUNCION COMANDO RMUSR
+ */
+ func ComandoREP(strComando []string) {
+	nombre := "";
+	path := "";
+	id := "";
+	ruta := "";
+	for i := 1; i < len(strComando); i++ {
+		var arregloComando = strings.Split(strComando[i], "->")
+		var strParametro string = strings.ToLower(arregloComando[0])
+		switch strParametro {
+		case "-id":
+			id = arregloComando[1]
+		case "-ruta":
+			ruta = arregloComando[1]
+		case "-path":
+			contadorComilla := strings.Count(arregloComando[1], "\"")
+			contadorIgual := strings.Count(arregloComando[1], "=")
+			removerComilla := strings.Replace(arregloComando[1], "\"", "", contadorComilla)
+			removerIgual := strings.Replace(removerComilla, "=", " ", contadorIgual)
+			path = removerIgual
+		case "-nombre":
+			nombre = arregloComando[1]
+		}
+	}
+	ReporteControlador.REP(nombre, path, id, ruta)
 	//FDISKControlador.FDISK(size, path, name, unit, types, fit, add, delete);
 }

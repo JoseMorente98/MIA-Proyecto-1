@@ -140,6 +140,11 @@ func LineaComando(strEntrada string) {
 		fmt.Println("                     RMUSR")
 		fmt.Println("╚══════════════════════════════════════════════════╝")
 		ComandoControlador.ComandoRMUSR(arregloComando)
+	case "rep":
+		fmt.Println("╔══════════════════════════════════════════════════╗")
+		fmt.Println("                      REP")
+		fmt.Println("╚══════════════════════════════════════════════════╝")
+		ComandoControlador.ComandoREP(arregloComando)	
 	default:
 		if !strings.Contains(strComando, "#") {
 			color.Red("╔══════════════════════════════════════════════════╗")

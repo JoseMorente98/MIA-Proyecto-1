@@ -1,0 +1,27 @@
+digraph {
+
+  tbl [
+
+    shape=plaintext
+    label=<
+
+      <table border='1' cellborder='1'>
+        <tr><td>HOLA</td><td>10021314545</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        <tr><td>foo</td><td>bar</td></tr>
+        
+
+      </table>
+
+    >];
+
+}
