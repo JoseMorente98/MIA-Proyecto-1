@@ -179,7 +179,7 @@ func MBR(ubicacion string, strPath string)  {
 	_, b, _, _ := runtime.Caller(0)
 
 	d := path.Join(path.Dir(b))
-	Ubicacion.CrearArchivo(filepath.Dir(d) + "/ReporteControlador/mbr.dot", strReporte)
+	Ubicacion.CrearArchivoRep(filepath.Dir(d) + "/ReporteControlador/mbr.dot", strReporte)
 
 	
 	var strUrl = filepath.Dir(d) + "/ReporteControlador/mbr.dot"
