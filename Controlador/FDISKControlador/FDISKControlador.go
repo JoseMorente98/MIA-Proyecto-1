@@ -102,7 +102,7 @@ func Reescritura(name string, unit string, path string, types string, fit string
 	default:
 		sizeUNIT = 1024;
 	}
-	size = sizeUNIT * size;
+	size = sizeUNIT * size - 1;
 
 	readFile(name, path, types, fit, size)
 }
@@ -113,7 +113,8 @@ func Reescritura(name string, unit string, path string, types string, fit string
 func readFile(name string, path string, types string, fit string, sizeDisk int64) {
 	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, os.ModeAppend)
 	defer file.Close() 
-	if err != nil { //validar que no sea nulo.
+	//VALIDAR QUE EXISTA EL DISCO
+	if err != nil { 
 		log.Fatal(err)
 		color.Red("╔══════════════════════════════════════════════════╗")
 		color.Red("         No se encuentra el disco D:")
@@ -135,53 +136,83 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 		log.Fatal("binary.Read failed", err)
 	}
 
-	//fmt.Println(m)
-
 	//===================================================================
 	//                    OTRAS COMPROBACIONES
 	//===================================================================
 	if strings.ToLower(types) == "p" {
 		if (m.Mbr_partition_1 == Modelo.PARTICION{}) {
+			if (sizeDisk < m.Mbr_size_disponible) {
+				m.Mbr_partition_1 = crearParticion(name, types, fit, sizeDisk, int64(size), "1");
+				m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
+			} else {
+				color.Red("╔══════════════════════════════════════════════════╗")
+				color.Red("        Ya no queda espacio disponible D: ")
+				color.Red("╚══════════════════════════════════════════════════╝")
+				informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+			}
 			//CREAR PARTICION 1
-			m.Mbr_partition_1 = crearParticion(name, types, fit, sizeDisk, int64(size), "1");
 		} else if (m.Mbr_partition_2 == Modelo.PARTICION{}) {
 			particion := Modelo.PARTICION{};
 			copy(particion.Part_name[:], name)
-			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 {
-				color.Red("╔══════════════════════════════════════════════════╗")
-				color.Red("   El nombre de partición ya existe en el disco D:")
-				color.Red("╚══════════════════════════════════════════════════╝")
+			if (sizeDisk < m.Mbr_size_disponible) {
+				if bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("   El nombre de partición ya existe en el disco D:")
+					color.Red("╚══════════════════════════════════════════════════╝")
+				} else {
+					//CREAR PARTICION 1
+					m.Mbr_partition_2 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_end, "2");
+					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
+				}	
 			} else {
-				//CREAR PARTICION 1
-				m.Mbr_partition_2 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_end, "2");
-			}		
+				color.Red("╔══════════════════════════════════════════════════╗")
+				color.Red("        Ya no queda espacio disponible D: ")
+				color.Red("╚══════════════════════════════════════════════════╝")
+				informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+			}	
 		} else if (m.Mbr_partition_3 == Modelo.PARTICION{}) {
 			particion := Modelo.PARTICION{};
 			copy(particion.Part_name[:], name)
-			if (
-			bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
-			bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0) {
-				color.Red("╔══════════════════════════════════════════════════╗")
-				color.Red("   El nombre de partición ya existe en el disco D:")
-				color.Red("╚══════════════════════════════════════════════════╝")
+			if (sizeDisk < m.Mbr_size_disponible) {
+				if (
+				bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
+				bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0) {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("   El nombre de partición ya existe en el disco D:")
+					color.Red("╚══════════════════════════════════════════════════╝")
+				} else {
+					//CREAR PARTICION 3
+					m.Mbr_partition_3 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_end, "1");
+					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
+				}
 			} else {
-				//CREAR PARTICION 3
-				m.Mbr_partition_3 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_end, "1");
-			}
+				color.Red("╔══════════════════════════════════════════════════╗")
+				color.Red("        Ya no queda espacio disponible D: ")
+				color.Red("╚══════════════════════════════════════════════════╝")
+				informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+			}	
 		} else if (m.Mbr_partition_4 == Modelo.PARTICION{}) {
 			particion := Modelo.PARTICION{};
 			copy(particion.Part_name[:], name)
+			if (sizeDisk < m.Mbr_size_disponible) {
 			
-			if (bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
-			bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0 ||
-			bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_name[:]) == 0) {
-				color.Red("╔══════════════════════════════════════════════════╗")
-				color.Red("   El nombre de partición ya existe en el disco D:")
-				color.Red("╚══════════════════════════════════════════════════╝")
+				if (bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
+				bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0 ||
+				bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_name[:]) == 0) {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("   El nombre de partición ya existe en el disco D:")
+					color.Red("╚══════════════════════════════════════════════════╝")
+				} else {
+					//CREAR PARTICION 4
+					m.Mbr_partition_4 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_end, "1");
+					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
+				}
 			} else {
-				//CREAR PARTICION 4
-				m.Mbr_partition_4 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_end, "1");
-			}
+				color.Red("╔══════════════════════════════════════════════════╗")
+				color.Red("        Ya no queda espacio disponible D: ")
+				color.Red("╚══════════════════════════════════════════════════╝")
+				informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+			}	
 		} else {
 			color.Red("╔══════════════════════════════════════════════════╗")
 			color.Red("      Ya no se puede crear mas particiones D:")
@@ -190,150 +221,189 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 	} else if strings.ToLower(types) == "e" {
 		if(m.Mbr_Extendida == 0) {
 			if (m.Mbr_partition_1 == Modelo.PARTICION{}) {
-				particion := Modelo.PARTICION{};
-				copy(particion.Part_name[:], name)
-				copy(particion.Part_fit[:], fit)
-				particion.Part_size = sizeDisk;
-				particion.Part_status = 'T';
-				particion.Part_type = types[0];
-				particion.Part_start = int64(size);
-				particion.Part_end = particion.Part_start + sizeDisk;
-				
-				/**
-				* LLENADO EBR
-				*/
-				particionEBR := Modelo.EBR{};
-				copy(particionEBR.Part_name[:], name)
-				copy(particionEBR.Part_fit[:], fit)
-				particionEBR.Part_size = sizeDisk;
-				particionEBR.Part_status = 'T';
-				particionEBR.Part_start = int64(size);
-				particionEBR.Part_end = particion.Part_start + sizeDisk;
-				particionEBR.Part_next = -1;
-				particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
-				particion.Part_EBR[0] = particionEBR;
+				if (sizeDisk < m.Mbr_size_disponible) {
+					particion := Modelo.PARTICION{};
+					copy(particion.Part_name[:], name)
+					copy(particion.Part_fit[:], fit)
+					particion.Part_size = sizeDisk;
+					particion.Part_size_disponible = sizeDisk;
+					particion.Part_status = 'T';
+					particion.Part_type = types[0];
+					particion.Part_start = int64(size);
+					particion.Part_end = particion.Part_start + sizeDisk;
+					
+					/**
+					* LLENADO EBR
+					*/
+					particionEBR := Modelo.EBR{};
+					copy(particionEBR.Part_name[:], name)
+					copy(particionEBR.Part_fit[:], fit)
+					particionEBR.Part_size = sizeDisk;
+					particionEBR.Part_status = 'T';
+					particionEBR.Part_start = int64(size);
+					particionEBR.Part_end = particion.Part_start + sizeDisk;
+					particionEBR.Part_next = -1;
+					particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
+					particion.Part_EBR[0] = particionEBR;
 
-				m.Mbr_partition_1 = particion;
-				informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
-				string(particion.Part_status), 
-				strconv.FormatInt(particion.Part_start, 10),
-				strconv.FormatInt(particion.Part_end, 10), "1", string(particion.Part_type));
-				m.Mbr_Extendida = 1;
+					m.Mbr_partition_1 = particion;
+					informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
+					string(particion.Part_status), 
+					strconv.FormatInt(particion.Part_start, 10),
+					strconv.FormatInt(particion.Part_end, 10), "1", string(particion.Part_type));
+					m.Mbr_Extendida = 1;
+					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
+				} else {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("        Ya no queda espacio disponible D: ")
+					color.Red("╚══════════════════════════════════════════════════╝")
+					informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+				}	
 
 			} else if (m.Mbr_partition_2 == Modelo.PARTICION{}) {
-				particion := Modelo.PARTICION{};
-				copy(particion.Part_name[:], name)
-				copy(particion.Part_fit[:], fit)
-				particion.Part_size = sizeDisk;
-				particion.Part_status = 'T';
-				particion.Part_type = types[0];
-				particion.Part_start = m.Mbr_partition_1.Part_end;
-				particion.Part_end = particion.Part_start + sizeDisk;
-				if bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 {
-					color.Red("╔══════════════════════════════════════════════════╗")
-					color.Red("   El nombre de partición ya existe en el disco D:")
-					color.Red("╚══════════════════════════════════════════════════╝")
-				} else {
-					
-					/**
-					* LLENADO EBR
-					*/
-					particionEBR := Modelo.EBR{};
-					copy(particionEBR.Part_name[:], name)
-					copy(particionEBR.Part_fit[:], fit)
-					particionEBR.Part_size = sizeDisk;
-					particionEBR.Part_status = 'T';
-					particionEBR.Part_start = int64(size);
-					particionEBR.Part_end = particion.Part_start + sizeDisk;
-					particionEBR.Part_next = -1;
-					particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
-					particion.Part_EBR[0] = particionEBR;
+				if (sizeDisk < m.Mbr_size_disponible) {
 
-					m.Mbr_partition_2 = particion;
-					informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
-					string(particion.Part_status), 
-					strconv.FormatInt(particion.Part_start, 10),
-					strconv.FormatInt(particion.Part_end, 10), "2", string(particion.Part_type));
-				}	
-				m.Mbr_Extendida = 1;	
+					particion := Modelo.PARTICION{};
+					copy(particion.Part_name[:], name)
+					copy(particion.Part_fit[:], fit)
+					particion.Part_size = sizeDisk;
+					particion.Part_size_disponible = sizeDisk;
+					particion.Part_status = 'T';
+					particion.Part_type = types[0];
+					particion.Part_start = m.Mbr_partition_1.Part_end;
+					particion.Part_end = particion.Part_start + sizeDisk;
+					if bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("   El nombre de partición ya existe en el disco D:")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					} else {
+						
+						/**
+						* LLENADO EBR
+						*/
+						particionEBR := Modelo.EBR{};
+						copy(particionEBR.Part_name[:], name)
+						copy(particionEBR.Part_fit[:], fit)
+						particionEBR.Part_size = sizeDisk;
+						particionEBR.Part_status = 'T';
+						particionEBR.Part_start = int64(size);
+						particionEBR.Part_end = particion.Part_start + sizeDisk;
+						particionEBR.Part_next = -1;
+						particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
+						particion.Part_EBR[0] = particionEBR;
+
+						m.Mbr_partition_2 = particion;
+						informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
+						string(particion.Part_status), 
+						strconv.FormatInt(particion.Part_start, 10),
+						strconv.FormatInt(particion.Part_end, 10), "2", string(particion.Part_type));
+					}	
+					m.Mbr_Extendida = 1;
+					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
+				} else {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("        Ya no queda espacio disponible D: ")
+					color.Red("╚══════════════════════════════════════════════════╝")
+					informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+				}
 			} else if (m.Mbr_partition_3 == Modelo.PARTICION{}) {
-				particion := Modelo.PARTICION{};
-				copy(particion.Part_name[:], name)
-				copy(particion.Part_fit[:], fit)
-				particion.Part_size = sizeDisk;
-				particion.Part_status = 'T';
-				particion.Part_type = types[0];
-				particion.Part_start = m.Mbr_partition_2.Part_end;
-				particion.Part_end = particion.Part_start + sizeDisk;
-				if (
-				bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
-				bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0) {
-					color.Red("╔══════════════════════════════════════════════════╗")
-					color.Red("   El nombre de partición ya existe en el disco D:")
-					color.Red("╚══════════════════════════════════════════════════╝")
+				if (sizeDisk < m.Mbr_size_disponible) {
+
+					particion := Modelo.PARTICION{};
+					copy(particion.Part_name[:], name)
+					copy(particion.Part_fit[:], fit)
+					particion.Part_size = sizeDisk;
+					particion.Part_size_disponible = sizeDisk;
+					particion.Part_status = 'T';
+					particion.Part_type = types[0];
+					particion.Part_start = m.Mbr_partition_2.Part_end;
+					particion.Part_end = particion.Part_start + sizeDisk;
+					if (
+					bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
+					bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0) {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("   El nombre de partición ya existe en el disco D:")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					} else {
+						
+						/**
+						* LLENADO EBR
+						*/
+						particionEBR := Modelo.EBR{};
+						copy(particionEBR.Part_name[:], name)
+						copy(particionEBR.Part_fit[:], fit)
+						particionEBR.Part_size = sizeDisk;
+						particionEBR.Part_status = 'T';
+						particionEBR.Part_start = int64(size);
+						particionEBR.Part_end = particion.Part_start + sizeDisk;
+						particionEBR.Part_next = -1;
+						particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
+						particion.Part_EBR[0] = particionEBR;
+
+						m.Mbr_partition_3 = particion;
+						informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
+						string(particion.Part_status), 
+						strconv.FormatInt(particion.Part_start, 10),
+						strconv.FormatInt(particion.Part_end, 10), "3", string(particion.Part_type));
+
+					}
+					m.Mbr_Extendida = 1;
+					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
 				} else {
-					
-					/**
-					* LLENADO EBR
-					*/
-					particionEBR := Modelo.EBR{};
-					copy(particionEBR.Part_name[:], name)
-					copy(particionEBR.Part_fit[:], fit)
-					particionEBR.Part_size = sizeDisk;
-					particionEBR.Part_status = 'T';
-					particionEBR.Part_start = int64(size);
-					particionEBR.Part_end = particion.Part_start + sizeDisk;
-					particionEBR.Part_next = -1;
-					particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
-					particion.Part_EBR[0] = particionEBR;
-
-					m.Mbr_partition_3 = particion;
-					informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
-					string(particion.Part_status), 
-					strconv.FormatInt(particion.Part_start, 10),
-					strconv.FormatInt(particion.Part_end, 10), "3", string(particion.Part_type));
-
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("        Ya no queda espacio disponible D: ")
+					color.Red("╚══════════════════════════════════════════════════╝")
+					informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
 				}
-				m.Mbr_Extendida = 1;
 			} else if (m.Mbr_partition_4 == Modelo.PARTICION{}) {
-				particion := Modelo.PARTICION{};
-				copy(particion.Part_name[:], name)
-				copy(particion.Part_fit[:], fit)
-				particion.Part_size = sizeDisk;
-				particion.Part_status = 'T';
-				particion.Part_type = types[0];
-				particion.Part_start = m.Mbr_partition_3.Part_end;
-				particion.Part_end = particion.Part_start + sizeDisk;
-				
-				if (bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
-				bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0 ||
-				bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_name[:]) == 0) {
-					color.Red("╔══════════════════════════════════════════════════╗")
-					color.Red("   El nombre de partición ya existe en el disco D:")
-					color.Red("╚══════════════════════════════════════════════════╝")
-				} else {
-					
-					/**
-					* LLENADO EBR
-					*/
-					particionEBR := Modelo.EBR{};
-					copy(particionEBR.Part_name[:], name)
-					copy(particionEBR.Part_fit[:], fit)
-					particionEBR.Part_size = sizeDisk;
-					particionEBR.Part_status = 'T';
-					particionEBR.Part_start = int64(size);
-					particionEBR.Part_end = particion.Part_start + sizeDisk;
-					particionEBR.Part_next = -1;
-					particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
-					particion.Part_EBR[0] = particionEBR;
+				if (sizeDisk < m.Mbr_size_disponible) {
 
-					m.Mbr_partition_4 = particion;
-					informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
-					string(particion.Part_status), 
-					strconv.FormatInt(particion.Part_start, 10),
-					strconv.FormatInt(particion.Part_end, 10), "4", string(particion.Part_type));
+					particion := Modelo.PARTICION{};
+					copy(particion.Part_name[:], name)
+					copy(particion.Part_fit[:], fit)
+					particion.Part_size = sizeDisk;
+					particion.Part_size_disponible = sizeDisk;
+					particion.Part_status = 'T';
+					particion.Part_type = types[0];
+					particion.Part_start = m.Mbr_partition_3.Part_end;
+					particion.Part_end = particion.Part_start + sizeDisk;
+					
+					if (bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 ||
+					bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0 ||
+					bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_name[:]) == 0) {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("   El nombre de partición ya existe en el disco D:")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					} else {
+						
+						/**
+						* LLENADO EBR
+						*/
+						particionEBR := Modelo.EBR{};
+						copy(particionEBR.Part_name[:], name)
+						copy(particionEBR.Part_fit[:], fit)
+						particionEBR.Part_size = sizeDisk;
+						particionEBR.Part_status = 'T';
+						particionEBR.Part_start = int64(size);
+						particionEBR.Part_end = particion.Part_start + sizeDisk;
+						particionEBR.Part_next = -1;
+						particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
+						particion.Part_EBR[0] = particionEBR;
+
+						m.Mbr_partition_4 = particion;
+						informacionParticion(name, fit, strconv.FormatInt(particion.Part_size, 10), 
+						string(particion.Part_status), 
+						strconv.FormatInt(particion.Part_start, 10),
+						strconv.FormatInt(particion.Part_end, 10), "4", string(particion.Part_type));
+					}
+					m.Mbr_Extendida = 1;
+					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
+				} else {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("        Ya no queda espacio disponible D: ")
+					color.Red("╚══════════════════════════════════════════════════╝")
+					informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
 				}
-				m.Mbr_Extendida = 1;
 			} else {
 				color.Red("╔══════════════════════════════════════════════════╗")
 				color.Red("      Ya no se puede crear mas particiones D:")
@@ -348,12 +418,6 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 			return;
 		}		
 	} else if strings.ToLower(types) == "l" {
-		/**
-		* CREACION PARTICION LOGICA
-		*/
-		//1 ASIGNAR LOGICA EBR
-//2 SI ES NUEVA CREAR EBR Y ASIGNAR LOGICA
-//VALIDACION DE NOMBRES
 		if(m.Mbr_Extendida == 1) {
 			var nombre [16]byte;
 			copy(nombre[:], name)
@@ -368,7 +432,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 100; i++ {
+				for i := 0; i < 50; i++ {
 					//color.Red(string(m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]));
 					//color.Red(string(nombre[:]));
 					if bytes.Compare(nombre[:], m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
@@ -379,18 +443,36 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 100; i++ {
+				for i := 0; i < 50; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_1.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
-							m.Mbr_partition_1.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[0].Part_start);
-							break;
+							if (sizeDisk < m.Mbr_partition_1.Part_size_disponible) {
+								m.Mbr_partition_1.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[0].Part_start);
+								m.Mbr_partition_1.Part_size_disponible = m.Mbr_partition_1.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_1.Part_size, 10), strconv.FormatInt(m.Mbr_partition_1.Part_size_disponible, 10))
+								break;
+							}
 						}
 					} else {
 						if(m.Mbr_partition_1.Part_EBR[i] == Modelo.EBR{}) {
-							m.Mbr_partition_1.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[i-1].Part_end);
-							m.Mbr_partition_1.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[0].Part_end);
-							break;
+							if (sizeDisk < m.Mbr_partition_1.Part_size_disponible) {
+								m.Mbr_partition_1.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[i-1].Part_end);
+								m.Mbr_partition_1.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[0].Part_end);
+								m.Mbr_partition_1.Part_size_disponible = m.Mbr_partition_1.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_1.Part_size, 10), strconv.FormatInt(m.Mbr_partition_1.Part_size_disponible, 10))
+								break;
+							}
 						}
 					}
 				}
@@ -404,9 +486,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 100; i++ {
-					//color.Red(string(m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_name[:]));
-					//color.Red(string(nombre[:]));
+				for i := 0; i < 50; i++ {
 					if bytes.Compare(nombre[:], m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
 						color.Cyan("╔══════════════════════════════════════════════════╗")
 						color.Cyan("   El nombre de partición ya existe en el disco D:")
@@ -415,18 +495,36 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 100; i++ {
+				for i := 0; i < 50; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_2.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
-							m.Mbr_partition_2.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[0].Part_start);
-							break;
+							if (sizeDisk < m.Mbr_partition_2.Part_size_disponible) {
+								m.Mbr_partition_2.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[0].Part_start);
+								m.Mbr_partition_2.Part_size_disponible = m.Mbr_partition_2.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_2.Part_size, 10), strconv.FormatInt(m.Mbr_partition_2.Part_size_disponible, 10))
+								break;
+							}
 						}
 					} else {
 						if(m.Mbr_partition_2.Part_EBR[i] == Modelo.EBR{}) {
-							m.Mbr_partition_2.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[i-1].Part_end);
-							m.Mbr_partition_2.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[0].Part_end);
-							break;
+							if (sizeDisk < m.Mbr_partition_2.Part_size_disponible) {
+								m.Mbr_partition_2.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[i-1].Part_end);
+								m.Mbr_partition_2.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[0].Part_end);
+								m.Mbr_partition_2.Part_size_disponible = m.Mbr_partition_2.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_2.Part_size, 10), strconv.FormatInt(m.Mbr_partition_2.Part_size_disponible, 10))
+								break;
+							}
 						}
 					}
 				}
@@ -440,7 +538,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 100; i++ {
+				for i := 0; i < 50; i++ {
 					//color.Red(string(m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_name[:]));
 					//color.Red(string(nombre[:]));
 					if bytes.Compare(nombre[:], m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
@@ -451,18 +549,36 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 100; i++ {
+				for i := 0; i < 50; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_3.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
-							m.Mbr_partition_3.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[0].Part_start);
-							break;
+							if (sizeDisk < m.Mbr_partition_3.Part_size_disponible) {
+								m.Mbr_partition_3.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[0].Part_start);
+								m.Mbr_partition_3.Part_size_disponible = m.Mbr_partition_3.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_3.Part_size, 10), strconv.FormatInt(m.Mbr_partition_3.Part_size_disponible, 10))
+								break;
+							}
 						}
 					} else {
 						if(m.Mbr_partition_3.Part_EBR[i] == Modelo.EBR{}) {
-							m.Mbr_partition_3.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[i-1].Part_end);
-							m.Mbr_partition_3.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[0].Part_end);
-							break;
+							if (sizeDisk < m.Mbr_partition_3.Part_size_disponible) {
+								m.Mbr_partition_3.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[i-1].Part_end);
+								m.Mbr_partition_3.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[0].Part_end);
+								m.Mbr_partition_3.Part_size_disponible = m.Mbr_partition_3.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_3.Part_size, 10), strconv.FormatInt(m.Mbr_partition_3.Part_size_disponible, 10))
+								break;
+							}
 						}
 					}
 				}
@@ -476,7 +592,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 100; i++ {
+				for i := 0; i < 50; i++ {
 					//color.Red(string(m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_name[:]));
 					//color.Red(string(nombre[:]));
 					if bytes.Compare(nombre[:], m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
@@ -487,18 +603,36 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 100; i++ {
+				for i := 0; i < 50; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_4.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
-							m.Mbr_partition_4.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_4.Part_EBR[0].Part_start);
-							break;
+							if (sizeDisk < m.Mbr_partition_4.Part_size_disponible) {
+								m.Mbr_partition_4.Part_EBR[0].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_4.Part_EBR[0].Part_start);
+								m.Mbr_partition_4.Part_size_disponible = m.Mbr_partition_4.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_4.Part_size, 10), strconv.FormatInt(m.Mbr_partition_4.Part_size_disponible, 10))
+								break;
+							}
 						}
 					} else {
 						if(m.Mbr_partition_4.Part_EBR[i] == Modelo.EBR{}) {
-							m.Mbr_partition_4.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_4.Part_EBR[i-1].Part_end);
-							m.Mbr_partition_4.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_4.Part_EBR[0].Part_end);
-							break;
+							if (sizeDisk < m.Mbr_partition_4.Part_size_disponible) {
+								m.Mbr_partition_4.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_4.Part_EBR[i-1].Part_end);
+								m.Mbr_partition_4.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_4.Part_EBR[0].Part_end);
+								m.Mbr_partition_4.Part_size_disponible = m.Mbr_partition_4.Part_size_disponible - sizeDisk;
+								break;
+							} else {
+								color.Red("╔══════════════════════════════════════════════════╗")
+								color.Red("        Ya no queda espacio disponible D: ")
+								color.Red("╚══════════════════════════════════════════════════╝")
+								informacionEXT(strconv.FormatInt(m.Mbr_partition_4.Part_size, 10), strconv.FormatInt(m.Mbr_partition_4.Part_size_disponible, 10))
+								break;
+							}
 						}
 					}
 				}
@@ -507,7 +641,8 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 			color.Red("╔══════════════════════════════════════════════════╗")
 			color.Red("        Debe crear una partición extendida D:")
 			color.Red("╚══════════════════════════════════════════════════╝")
-		}	
+		}
+		
 	}
 	//fmt.Println(m)
 
@@ -541,6 +676,28 @@ func escrituraBytes(archivo *os.File, bytes []byte) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+/**
+ * INFORMACIÓN DE PARTICION 
+ */
+ func informacionMBR(size string, sizeD string) {
+	color.Magenta("╔══════════════════════════════════════════════════╗")
+	color.Magenta("                       MBR ")
+	color.Magenta("  Size: " + size)
+	color.Magenta("  Size Disponible: " + sizeD)
+	color.Magenta("╚══════════════════════════════════════════════════╝")
+}
+
+/**
+ * INFORMACIÓN DE PARTICION 
+ */
+func informacionEXT(size string, sizeD string) {
+	color.Magenta("╔══════════════════════════════════════════════════╗")
+	color.Magenta("                 PARTICION EXTENDIDA ")
+	color.Magenta("  Size: " + size)
+	color.Magenta("  Size Disponible: " + sizeD)
+	color.Magenta("╚══════════════════════════════════════════════════╝")
 }
 
 /**

@@ -3,7 +3,6 @@ package ControladorMBR
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"strings"
 	"github.com/fatih/color"
 	"log"
@@ -30,7 +29,7 @@ func MKDISK(size string, path string, name string, unit string) {
 					color.Red("  No se puede convertir string a int64 D:")
 					color.Red("╚══════════════════════════════════════════════════╝")
 				}
-				CrearArchivo(n, path, name, unit);
+				CrearArchivo(n, path, name, strings.ToLower(unit));
 			} else {
 				color.Red("╔══════════════════════════════════════════════════╗")
 				color.Red("  Solo puedes utilizar m o k D:")
@@ -57,7 +56,8 @@ func MKDISK(size string, path string, name string, unit string) {
  * CREAR ARCHIVO BINARIO
  */
 func CrearArchivo(size int64, path string, name string, unit string) {
-	var sizeUNIT int64;
+	
+	var sizeUNIT int64 = 1024;
 	if size >= 1 {
 		if strings.Contains(name, ".dsk") {
 			switch strings.ToLower(unit) {
@@ -82,37 +82,37 @@ func CrearArchivo(size int64, path string, name string, unit string) {
 			s := &other
 
 			//ESCRIBIR CERO AL INICIO DEL ARCHIVO
-			var binaryTemp bytes.Buffer
-			binary.Write(&binaryTemp, binary.BigEndian, s)
-			escrituraBytes(archivo, binaryTemp.Bytes())
+			var binarioTemporal bytes.Buffer
+			binary.Write(&binarioTemporal, binary.BigEndian, s)
+			escrituraBytes(archivo, binarioTemporal.Bytes())
 
+			tamanio := sizeUNIT*size-1;
 			//TAMAÑO DE ARCHIVO SEGUN UNIT
-			archivo.Seek(sizeUNIT*size-1, 0)
-		
+			archivo.Seek(tamanio, 0);
+			
 			//ESCRIBIR 0 AL FINAL DEL ARCHIVO
-			var binaryTemp2 bytes.Buffer
-			binary.Write(&binaryTemp2, binary.BigEndian, s)
-			escrituraBytes(archivo, binaryTemp2.Bytes())
+			var binarioTemporal2 bytes.Buffer
+			binary.Write(&binarioTemporal2, binary.BigEndian, s)
+			escrituraBytes(archivo, binarioTemporal2.Bytes())
 			archivo.Seek(0, 0)
 		
 			//ASIGNAR VALORES A STRUCT
 			fechaHora := time.Now();
 			disco := Modelo.MBR{}
 			disco.Mbr_size = size*sizeUNIT-1;
+			disco.Mbr_size_disponible = size*sizeUNIT-1;
 			copy(disco.Mbr_date[:], fechaHora.Format("2000-01-01 00:00:01"))
 			disco.Mbr_disk_signature = rand.Int63();
 			disco.Mbr_partition_1 = Modelo.PARTICION{};
 			disco.Mbr_partition_2 = Modelo.PARTICION{};
 			disco.Mbr_partition_3 = Modelo.PARTICION{};
 			disco.Mbr_partition_4 = Modelo.PARTICION{};
-			fmt.Println(disco)
 			s1 := &disco
 
-		
 			//ESCRITURA DEL STRUCT
-			var binaryTemp3 bytes.Buffer
-			binary.Write(&binaryTemp3, binary.BigEndian, s1)
-			escrituraBytes(archivo, binaryTemp3.Bytes())
+			var binarioTemporal3 bytes.Buffer
+			binary.Write(&binarioTemporal3, binary.BigEndian, s1)
+			escrituraBytes(archivo, binarioTemporal3.Bytes())
 			color.Green("╔══════════════════════════════════════════════════╗")
 			color.Green("  Disco creado exitosamente :D")
 			color.Green("╚══════════════════════════════════════════════════╝")

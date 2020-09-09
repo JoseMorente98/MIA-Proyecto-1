@@ -27,8 +27,9 @@ type PARTICION struct {
 	Part_start				int64
 	Part_end				int64
 	Part_size				int64
+	Part_size_disponible	int64
 	Part_name				[16]byte
-	Part_EBR				[100]EBR
+	Part_EBR				[50]EBR
 }
 
 /**
@@ -49,6 +50,7 @@ type PARTICION struct {
  */
 type MBR struct {
 	Mbr_size				int64
+	Mbr_size_disponible		int64
 	Mbr_date 				[19]byte
 	Mbr_disk_signature   	int64
 	Mbr_Extendida	   		int8
@@ -109,18 +111,69 @@ type SUPERBOOT struct {
  * ARBOL VIRTUAL DE DIRECTORIO 
  */
 type AVD struct {
-	Avd_fecha_creacion								[19]byte
-	Avd_nombre_directorio							[100]byte
-	Avd_ap_array_subdirectorios						byte
-	Avd_ap_detalle_directorio						byte
-	Avd_ap_arbol_virtual_directorio					byte
-	Avd_proper										byte
+	Avd_fecha_creacion						[19]byte
+	Avd_nombre_directorio					[100]byte
+	Avd_ap_array_subdirectorios				byte
+	Avd_ap_detalle_directorio				int64
+	Avd_ap_arbol_virtual_directorio			int64
+	Avd_proper								int64
 }
 
+/**
+ * DETALLE DE DIRECTORIO
+ */
+type DD struct {
+	dd_array_files 							[5]DDFILE
+	dd_ap_detalle_directorio				int64
+}
+
+/**
+ * DETALLE DE DIRECTORIO
+ */
+type DDFILE struct {
+	DD_file_nombre            				[20]byte
+	DD_file_ap_inodo          				int64
+	DD_file_date_creacion2     				[19]byte
+	DD_file_date_modificacion2 				[19]byte
+}
+
+/**
+ * INODO
+ */
+type INODO struct {
+	I_count_inodo             				int64
+	I_size_archivo            				int64
+	I_count_bloques_asignados 				int64
+	I_array_bloques           				[4]int64
+	I_ap_indirecto            				int64
+	I_id_proper               				int64
+}
+
+/**
+ * BLOQUE
+ */
+type BLOQUE struct {
+	DB_data 								[25]byte
+}
+
+/**
+ * LOG
+ */
+type LOG struct {
+	Log_tipo_operacion 						int64
+	log_tipo           						int8
+	log_nombre         						[100]byte
+	log_contenido      						[50]byte
+	log_fecha          						[19]byte
+}
+
+/**
+ * USUARIO
+ */
 type USUARIO struct {
-	Usuario_id       		string
-	Usuario_type     		string
-	Usuario_group    		string
-	Usuario_username 		string
-	Usuario_password 		string
+	Usuario_id       						string
+	Usuario_type     						string
+	Usuario_group    						string
+	Usuario_username 						string
+	Usuario_password 						string
 }
