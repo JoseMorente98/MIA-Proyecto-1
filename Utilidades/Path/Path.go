@@ -81,7 +81,15 @@ func CrearArchivoRep(ubicacion string, strCadena string) {
 			fmt.Println(l)
 		}
 	} else if !info.IsDir() {
-		updatedFile(ubicacion, strCadena)
+		err := os.Remove(ubicacion)
+
+		if err != nil {
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("  Ha ocurrido un error D:")
+			color.Red("╚══════════════════════════════════════════════════╝")
+			return
+		}
+		CrearArchivo(ubicacion, strCadena)
 	}
 }
 

@@ -102,5 +102,8 @@ login -usr->root2 -pwd->201801232 -id->vda2
 
 mount -path->"/home/jmorente/Documentos/Manejo e Implementación de Archivos/DiscoTest2.dsk" -name->Particion1
 rep -path->"/home/jmorente/Documentos/MIA/holamundo.png" -id->vda1 -nombre->mbr
+rep -path->"/home/jmorente/Documentos/MIA/holamundo.png" -id->vda1 -nombre->mbr
 
 dot -Tpng "/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Controlador/ReporteControlador/mbr.dot" -o "/home/jmorente/Documentos/MIA/mbr.png"
+
+dot -Tpng "/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Controlador/ReporteControlador/mbr.dot" -o "/home/jmorente/Documentos/MIA/holamundo.png"

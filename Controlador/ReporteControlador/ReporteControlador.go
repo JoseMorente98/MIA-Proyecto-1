@@ -122,57 +122,65 @@ func MBR(ubicacion string, strPath string)  {
 		log.Fatal("binary.Read failed", err)
 	}
 
-	var strReporte = "digraph {"+
-	"tbl [ "+
-	"shape=plaintext "+
-	"label=<"+
+	var strReporte = "digraph {\n"+
+	"tbl [ \n"+
+	"shape=plaintext \n"+
+	"label=<\n"+
 
-	"<table border='1' cellborder='1'>"+
-	"<tr><td>Name</td><td>Valor</td></tr>"
+	"<table border='1' cellborder='1'>\n"+
+	"<tr><td>Name</td><td>Valor</td></tr>\n"
 
 	//LLENADO MBR
-	strReporte += "<tr><td>MBR Tamano</td><td>"+ strconv.FormatInt(m.Mbr_size, 10) +"</td></tr>"
-	strReporte += "<tr><td>MBR Fecha Creacion</td><td>"+ string(m.Mbr_date[:]) +"</td></tr>"
-	strReporte += "<tr><td>MBR Disk Asignature</td><td>"+  strconv.FormatInt(m.Mbr_disk_signature, 10) +"</td></tr>"
+	strReporte += "<tr><td>MBR Tamano</td><td>"+ strconv.FormatInt(m.Mbr_size, 10) +"</td></tr>\n"
+	strReporte += "<tr><td>MBR Fecha Creacion</td><td>"+ string(m.Mbr_date[:]) +"</td></tr>\n"
+	strReporte += "<tr><td>MBR Disk Asignature</td><td>"+  strconv.FormatInt(m.Mbr_disk_signature, 10) +"</td></tr>\n"
 
 	//REPORTE PARTICION 1
 	s1 := BytesToString(m.Mbr_partition_1.Part_name[:])
 	s2 := BytesToString(m.Mbr_partition_2.Part_name[:])
 	s3 := BytesToString(m.Mbr_partition_3.Part_name[:])
 	s4 := BytesToString(m.Mbr_partition_4.Part_name[:])
-	strReporte += "<tr><td>MBR Particion No. 1</td><td></td></tr>"
-	strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_1.Part_status) +"</td></tr>"
-	strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_1.Part_type) +"</td></tr>"
-	strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_1.Part_fit[:]) +"</td></tr>"
-	strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_1.Part_start, 10) +"</td></tr>"
-	strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_1.Part_size, 10) +"</td></tr>"
-	strReporte += "<tr><td>Name</td><td>"+ s1 +"</td></tr>"
-	//REPORTE PARTICION 2
-	strReporte += "<tr><td>MBR Particion No. 2</td><td></td></tr>"
-	strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_2.Part_status) +"</td></tr>"
-	strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_2.Part_type) +"</td></tr>"
-	strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_2.Part_fit[:]) +"</td></tr>"
-	strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_2.Part_start, 10) +"</td></tr>"
-	strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_2.Part_size, 10) +"</td></tr>"
-	strReporte += "<tr><td>Name</td><td>"+ s2 +"</td></tr>"
-	//REPORTE PARTICION 3
-	strReporte += "<tr><td>MBR Particion No. 3</td><td></td></tr>"
-	strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_3.Part_status) +"</td></tr>"
-	strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_3.Part_type) +"</td></tr>"
-	strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_3.Part_fit[:]) +"</td></tr>"
-	strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_3.Part_start, 10) +"</td></tr>"
-	strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_3.Part_size, 10) +"</td></tr>"
-	strReporte += "<tr><td>Name</td><td>"+ s3 +"</td></tr>"
-	//REPORTE PARTICION 4
-	strReporte += "<tr><td>MBR Particion No. 4</td><td></td></tr>"
-	strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_4.Part_status) +"</td></tr>"
-	strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_4.Part_type) +"</td></tr>"
-	strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_4.Part_fit[:]) +"</td></tr>"
-	strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_4.Part_start, 10) +"</td></tr>"
-	strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_4.Part_size, 10) +"</td></tr>"
-	strReporte += "<tr><td>Name</td><td>"+ s4 +"</td></tr>"
+	if (m.Mbr_partition_1 != Modelo.PARTICION{}) {
+		strReporte += "<tr><td>MBR Particion No. 1</td><td></td></tr>\n"
+		strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_1.Part_status) +"</td></tr>\n"
+		strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_1.Part_type) +"</td></tr>\n"
+		strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_1.Part_fit[:]) +"</td></tr>\n"
+		strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_1.Part_start, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_1.Part_size, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Name</td><td>"+ s1 +"</td></tr>\n"
+	}
+	if (m.Mbr_partition_2 != Modelo.PARTICION{}) {
+		//REPORTE PARTICION 2
+		strReporte += "<tr><td>MBR Particion No. 2</td><td></td></tr>\n"
+		strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_2.Part_status) +"</td></tr>\n"
+		strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_2.Part_type) +"</td></tr>\n"
+		strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_2.Part_fit[:]) +"</td></tr>\n"
+		strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_2.Part_start, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_2.Part_size, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Name</td><td>"+ s2 +"</td></tr>\n"
+	}
+	if (m.Mbr_partition_3 != Modelo.PARTICION{}) {
+		//REPORTE PARTICION 3
+		strReporte += "<tr><td>MBR Particion No. 3</td><td></td></tr>\n"
+		strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_3.Part_status) +"</td></tr>\n"
+		strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_3.Part_type) +"</td></tr>\n"
+		strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_3.Part_fit[:]) +"</td></tr>\n"
+		strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_3.Part_start, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_3.Part_size, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Name</td><td>"+ s3 +"</td></tr>\n"
+	}
+	if (m.Mbr_partition_4 != Modelo.PARTICION{}) {
+		//REPORTE PARTICION 4
+		strReporte += "<tr><td>MBR Particion No. 4</td><td></td></tr>\n"
+		strReporte += "<tr><td>Status</td><td>"+ string(m.Mbr_partition_4.Part_status) +"</td></tr>\n"
+		strReporte += "<tr><td>Type</td><td>"+ string(m.Mbr_partition_4.Part_type) +"</td></tr>\n"
+		strReporte += "<tr><td>Fit</td><td>"+ string(m.Mbr_partition_4.Part_fit[:]) +"</td></tr>\n"
+		strReporte += "<tr><td>Start</td><td>"+ strconv.FormatInt(m.Mbr_partition_4.Part_start, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Size</td><td>"+ strconv.FormatInt(m.Mbr_partition_4.Part_size, 10) +"</td></tr>\n"
+		strReporte += "<tr><td>Name</td><td>"+ s4 +"</td></tr>\n"
+	}
 
-	strReporte += "</table>"
+	strReporte += "</table>\n"
 
 
 	strReporte = strReporte +">];}"

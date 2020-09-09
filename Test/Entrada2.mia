@@ -28,3 +28,16 @@ Fdisk -sizE->1 -path->"/home/mis discos/Disco3.dsk" -name->Particion5 -unit->m -
 Fdisk -sizE->1 -path->"/home/mis discos/Disco3.dsk" -name->Particion6 -unit->m -TyPE->l
 Fdisk -sizE->1 -path->"/home/mis discos/Disco3.dsk" -name->Particion7 -unit->m -TyPE->l
 
+fdisk -delete->fast -name->Particion1 -path->"/home/mis discos/Disco3.dsk"
+fdisk -delete->fast -name->Particion2 -path->"/home/mis discos/Disco3.dsk"
+fdisk -delete->fast -name->Particion3 -path->"/home/mis discos/Disco3.dsk"
+fdisk -delete->fast -name->Particion4 -path->"/home/mis discos/Disco3.dsk"
+
+mount -path->"/home/mis discos/Disco3.dsk" -name->Particion1
+mount -path->"/home/mis discos/Disco3.dsk" -name->Particion2
+mount -path->"/home/mis discos/Disco3.dsk" -name->Particion3
+mount -path->"/home/mis discos/Disco3.dsk" -name->Particion4
+
+mount
+
+rep -path->"/home/mis discos/Disco3.png" -id->vda1 -nombre->mbr
