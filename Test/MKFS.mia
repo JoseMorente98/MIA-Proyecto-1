@@ -1,0 +1,29 @@
+Mkdisk -size->20 -path->"/home/mis discos/" -NaMe->Disco1.dsk
+Mkdisk -size->100 -path->"/home/mis discos/" -NaMe->Disco2.dsk -unit->k
+Mkdisk -size->10 -path->"/home/mis discos/" -NaMe->Disco3.dsk
+Mkdisk -size->50 -path->"/home/mis discos/" -NaMe->Disco4.dsk -unit->k
+
+pause
+
+Fdisk -sizE->5 -path->"/home/mis discos/Disco1.dsk" -name->Particion1 -unit->m
+Fdisk -sizE->5 -path->"/home/mis discos/Disco1.dsk" -name->Particion2 -unit->m
+Fdisk -sizE->5 -path->"/home/mis discos/Disco1.dsk" -name->Particion3 -unit->m
+Fdisk -sizE->4 -path->"/home/mis discos/Disco1.dsk" -name->Particion4 -unit->m
+
+pause
+
+mount -path->"/home/mis discos/Disco1.dsk" -name->Particion1
+mount -path->"/home/mis discos/Disco1.dsk" -name->Particion1
+mount -path->"/home/mis discos/Disco1.dsk" -name->Particion1
+mount -path->"/home/mis discos/Disco1.dsk" -name->Particion2
+mount -path->"/home/mis discos/Disco1.dsk" -name->Particion3
+mount -path->"/home/mis discos/Disco1.dsk" -name->Particion4
+
+pause
+
+mount
+
+
+pause
+
+mkfs -id->vda1

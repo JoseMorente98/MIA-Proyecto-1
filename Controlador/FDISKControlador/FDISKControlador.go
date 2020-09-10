@@ -189,7 +189,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 				} else {
 					//CREAR PARTICION 3
-					m.Mbr_partition_3 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_end, "1");
+					m.Mbr_partition_3 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_end, "3");
 					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
 				}
 			} else {
@@ -211,7 +211,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 				} else {
 					//CREAR PARTICION 4
-					m.Mbr_partition_4 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_end, "1");
+					m.Mbr_partition_4 = crearParticion(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_end, "4");
 					m.Mbr_size_disponible = m.Mbr_size_disponible - sizeDisk;
 				}
 			} else {
@@ -823,8 +823,6 @@ func EliminarParticion(path string, name string)  {
 	if err != nil {
 		log.Fatal("binary.Read failed", err)
 	}
-
-	//if(m.Mbr_partition_1.)
 
 	particion := Modelo.PARTICION{};
 	copy(particion.Part_name[:], name)

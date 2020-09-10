@@ -100,11 +100,11 @@ type SUPERBOOT struct {
 	SB_size_struct_detalle_directorio				int64
 	SB_size_struct_inodo							int64
 	SB_size_struct_bloque							int64
-	SB_free_first_bit_struct_arbol_directorio		byte
-	SB_free_first_bit_struct_detalle_directorio		byte
-	SB_free_first_bit_struct_inodo					byte
-	SB_free_first_bit_struct_bloque					byte
-	SB_magic_num									byte
+	SB_free_first_bit_struct_arbol_directorio		int64
+	SB_free_first_bit_struct_detalle_directorio		int64
+	SB_free_first_bit_struct_inodo					int64
+	SB_free_first_bit_struct_bloque					int64
+	SB_magic_num									int64
 }
 
 /**
@@ -157,9 +157,9 @@ type BLOQUE struct {
 }
 
 /**
- * LOG
+ * BITACORA
  */
-type LOG struct {
+type BITACORA struct {
 	Log_tipo_operacion 						int64
 	log_tipo           						int8
 	log_nombre         						[100]byte

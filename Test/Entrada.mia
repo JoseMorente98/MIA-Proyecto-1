@@ -107,3 +107,6 @@ rep -path->"/home/jmorente/Documentos/MIA/holamundo.png" -id->vda1 -nombre->mbr
 dot -Tpng "/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Controlador/ReporteControlador/mbr.dot" -o "/home/jmorente/Documentos/MIA/mbr.png"
 
 dot -Tpng "/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Controlador/ReporteControlador/mbr.dot" -o "/home/jmorente/Documentos/MIA/holamundo.png"
+
+
+exec -path->"/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Test/MKFS.mia"
