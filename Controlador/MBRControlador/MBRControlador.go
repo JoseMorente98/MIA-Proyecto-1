@@ -101,7 +101,7 @@ func CrearArchivo(size int64, path string, name string, unit string) {
 			disco := Modelo.MBR{}
 			disco.Mbr_size = size*sizeUNIT-1;
 			disco.Mbr_size_disponible = size*sizeUNIT-1;
-			copy(disco.Mbr_date[:], fechaHora.Format("2000-01-01 00:00:01"))
+			copy(disco.Mbr_date[:], fechaHora.Format("2006-01-02 15:04:05"))
 			disco.Mbr_disk_signature = rand.Int63();
 			disco.Mbr_partition_1 = Modelo.PARTICION{};
 			disco.Mbr_partition_2 = Modelo.PARTICION{};

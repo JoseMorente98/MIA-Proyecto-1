@@ -141,8 +141,8 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	var SB = Modelo.SUPERBOOT{};
 	fechaHora := time.Now();
 	copy(SB.SB_nombre_hd[:], nombre);
-	copy(SB.SB_date_creacion[:], fechaHora.Format("2000-01-01 00:00:01"))
-	copy(SB.SB_date_ultimo_montaje[:], fechaHora.Format("2000-01-01 00:00:01"))
+	copy(SB.SB_date_creacion[:], fechaHora.Format("2006-01-02 15:04:05"))
+	copy(SB.SB_date_ultimo_montaje[:], fechaHora.Format("2006-01-02 15:04:05"))
 	SB.SB_arbol_virtual_count = cantidadEstructuras;
 	SB.SB_detalle_directorio_count = cantidadDD;
 	SB.SB_inodos_count = cantidadInodos;
@@ -216,7 +216,7 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	* ESCRITURA AVD
 	*/
 	for i := Inicio_AVD; i < Inicio_bitmapDD; i++ {
-		var init int8 = '0'
+		var init int8 = 'a'
 		o := &init
 		file.Seek(i, 0)
 		var binarioTemp bytes.Buffer
@@ -240,7 +240,7 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	* ESCRITURA DD
 	*/
 	for i := Inicio_DD; i < Inicio_bitmapInodo; i++ {
-		var init int8 = '0'
+		var init int8 = 'd'
 		o := &init
 		file.Seek(i, 0)
 		var binarioTemp bytes.Buffer
@@ -264,7 +264,7 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	* ESCRITURA INODO
 	*/
 	for i := Inicio_Inodos; i < Inicio_bitmapBloque; i++ {
-		var init int8 = '0'
+		var init int8 = 'i'
 		o := &init
 		file.Seek(i, 0)
 		var binarioTemp bytes.Buffer
@@ -288,7 +288,7 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	* ESCRITURA BLOQUE
 	*/
 	for i := Inicio_Bloque; i < Inicio_Bitacora; i++ {
-		var init int8 = '0'
+		var init int8 = 'b'
 		o := &init
 		file.Seek(i, 0)
 		var binarioTemp bytes.Buffer
@@ -300,7 +300,7 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	* ESCRITURA BITACORA
 	*/
 	for i := Inicio_Bitacora; i < Inicio_SBCopia; i++ {
-		var init int8 = '0'
+		var init int8 = 'l'
 		o := &init
 		file.Seek(i, 0)
 		var binarioTemp bytes.Buffer
@@ -312,8 +312,8 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	var SBCOPY = Modelo.SUPERBOOT{};
 	fechaHoras := time.Now();
 	copy(SBCOPY.SB_nombre_hd[:], nombre);
-	copy(SBCOPY.SB_date_creacion[:], fechaHoras.Format("2000-01-01 00:00:01"))
-	copy(SBCOPY.SB_date_ultimo_montaje[:], fechaHoras.Format("2000-01-01 00:00:01"))
+	copy(SBCOPY.SB_date_creacion[:], fechaHoras.Format("2006-01-02 15:04:05"))
+	copy(SBCOPY.SB_date_ultimo_montaje[:], fechaHoras.Format("2006-01-02 15:04:05"))
 	SBCOPY.SB_arbol_virtual_count = cantidadEstructuras;
 	SBCOPY.SB_detalle_directorio_count = cantidadDD;
 	SBCOPY.SB_inodos_count = cantidadInodos;
@@ -347,7 +347,123 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	var binarioPQ bytes.Buffer
 	binary.Write(&binarioPQ, binary.BigEndian, b)
 	file.Write(binarioPQ.Bytes())
-	
+
+
+	/**
+	 * OBTENEMOS EL SUPERBOOT
+	 */
+	SBDIR := Modelo.SUPERBOOT{}
+	var sbSize int64 = int64(unsafe.Sizeof(SBDIR))
+	file.Seek(particion.Part_start, 0)
+	data := leerBytes(file, sbSize)
+	buffer := bytes.NewBuffer(data)
+
+	err := binary.Read(buffer, binary.BigEndian, &SBDIR)
+	if err != nil {
+		log.Fatal("binary.Read failed", err)
+	}
+
+	//CAMBIAMOS EL 0 POR UN 1 EN EL BITMAP AVD
+	file.Seek(SBDIR.SB_ap_bitmap_arbol_directorio, 0);
+	var unidad int8 = '1'
+	s1 := &unidad
+	var binarytemp1 bytes.Buffer
+	binary.Write(&binarytemp1, binary.BigEndian, s1)
+	escrituraBytes(file, binarytemp1.Bytes())
+
+	//INGRESAMOS EL AVD DE LA RUTA /
+	file.Seek(SBDIR.SB_ap_arbol_directorio, 0);
+	AVD := Modelo.AVD{}
+	var fechaAhora = time.Now()
+	copy(AVD.Avd_fecha_creacion[:], fechaAhora.Format("2006-01-02 15:04:05"))
+	copy(AVD.Avd_nombre_directorio[:], "/")
+	AVD.Avd_ap_detalle_directorio = SBDIR.SB_ap_detalle_directorio
+	AVD.Avd_ap_arbol_virtual_directorio = -1;
+	AVD.Avd_proper = 1;
+	for i := 0; i < 6; i++ {
+		AVD.Avd_ap_array_subdirectorios[i] = -1;
+	}
+	avd := &AVD
+	var binarytemp2 bytes.Buffer
+	binary.Write(&binarytemp2, binary.BigEndian, avd)
+	escrituraBytes(file, binarytemp2.Bytes())
+
+	//INGRESAMOS BITMAP DD
+	file.Seek(SBDIR.SB_ap_bitmap_detalle_directorio, 0)
+	var unidad2 int8 = '1'
+	s3 := &unidad2
+	var binarytemp3 bytes.Buffer
+	binary.Write(&binarytemp3, binary.BigEndian, s3)
+	escrituraBytes(file, binarytemp3.Bytes())
+
+	//INGRESAMOS DETALLE DE DIRECTORIO
+	file.Seek(SBDIR.SB_ap_detalle_directorio, 0);
+
+	DD := Modelo.DD{}
+	DD.DD_ap_detalle_directorio = 0;
+	DD.DD_array_files[0].DD_file_ap_inodo = SBDIR.SB_ap_bitmap_tabla_inodo;
+	copy(DD.DD_array_files[0].DD_file_nombre[:], "users.txt")
+	copy(DD.DD_array_files[0].DD_file_date_creacion[:], fechaAhora.Format("2006-01-02 15:04:05"))
+	copy(DD.DD_array_files[0].DD_file_date_modificacion[:], fechaAhora.Format("2006-01-02 15:04:05"))
+	DD1 := &DD
+	var binaryTemp4 bytes.Buffer
+	binary.Write(&binaryTemp4, binary.BigEndian, DD1)
+	escrituraBytes(file, binaryTemp4.Bytes())
+
+	//BITMAP INODO
+	file.Seek(SBDIR.SB_ap_bitmap_tabla_inodo, 0)
+	var unidad3 int8 = '1'
+	s9 := &unidad3
+	var binarytemp5 bytes.Buffer
+	binary.Write(&binarytemp5, binary.BigEndian, s9)
+	escrituraBytes(file, binarytemp5.Bytes())
+
+	//INODO
+	file.Seek(SBDIR.SB_ap_tabla_inodo, 0);
+	INODO := Modelo.INODO{}
+	INODO.I_count_inodo = 1;
+	INODO.I_size_archivo = 33;
+	INODO.I_ap_indirecto = -1;
+	INODO.I_id_proper = 1;
+	INODO.I_count_bloques_asignados = 2;
+	INODO.I_array_bloques[0] = SBDIR.SB_ap_bloques
+	INODO.I_array_bloques[1] = SBDIR.SB_ap_bloques + sizeSB;
+	INODO.I_array_bloques[2] = 0
+	INODO.I_array_bloques[3] = 0
+
+	inodo1 := &INODO
+	var binaryTemp6 bytes.Buffer
+	binary.Write(&binaryTemp6, binary.BigEndian, inodo1)
+	escrituraBytes(file, binaryTemp6.Bytes())
+
+	//INICIO DE BITMAP BLOQUE
+	file.Seek(SBDIR.SB_ap_bloques, 0)
+	var unidad4 int8 = '1'
+	s4 := &unidad4
+	var binarytemp7 bytes.Buffer
+	binary.Write(&binarytemp7, binary.BigEndian, s4)
+	escrituraBytes(file, binarytemp7.Bytes())
+	file.Seek(SBDIR.SB_ap_bloques+1, 0)
+	escrituraBytes(file, binarytemp7.Bytes())
+
+	//BLOQUES
+	file.Seek(SBDIR.SB_ap_bloques, 0);
+
+	B1 := Modelo.BLOQUE{};
+	B2 := Modelo.BLOQUE{};
+	copy(B1.DB_data[:], "1,G,root\n1,U,root,root,20")
+	copy(B2.DB_data[:], "1801237\n")
+	bloque1 := &B1
+	var binaryTemp8 bytes.Buffer
+	binary.Write(&binaryTemp8, binary.BigEndian, bloque1)
+	escrituraBytes(file, binaryTemp8.Bytes())
+
+	file.Seek(SBDIR.SB_ap_bloques + int64(unsafe.Sizeof(Modelo.BLOQUE{})), 0);
+	bloque2 := &B2
+	var binaryTemp9 bytes.Buffer
+	binary.Write(&binaryTemp9, binary.BigEndian, bloque2)
+	escrituraBytes(file, binaryTemp9.Bytes())
+
 }
 
 /**
@@ -359,4 +475,16 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+/**
+ * LECTURA DE BYTES
+ */
+ func leerBytes(file *os.File, number int64) []byte {
+	bytes := make([]byte, number) //array de bytes
+	_, err := file.Read(bytes) // Leido -> bytes
+	if err != nil {
+		log.Fatal(err)
+	}
+	return bytes
 }

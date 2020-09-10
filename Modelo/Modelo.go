@@ -112,8 +112,8 @@ type SUPERBOOT struct {
  */
 type AVD struct {
 	Avd_fecha_creacion						[19]byte
-	Avd_nombre_directorio					[100]byte
-	Avd_ap_array_subdirectorios				byte
+	Avd_nombre_directorio					[20]byte
+	Avd_ap_array_subdirectorios				[6]int64
 	Avd_ap_detalle_directorio				int64
 	Avd_ap_arbol_virtual_directorio			int64
 	Avd_proper								int64
@@ -123,8 +123,8 @@ type AVD struct {
  * DETALLE DE DIRECTORIO
  */
 type DD struct {
-	dd_array_files 							[5]DDFILE
-	dd_ap_detalle_directorio				int64
+	DD_array_files 							[5]DDFILE
+	DD_ap_detalle_directorio				int64
 }
 
 /**
@@ -133,8 +133,8 @@ type DD struct {
 type DDFILE struct {
 	DD_file_nombre            				[20]byte
 	DD_file_ap_inodo          				int64
-	DD_file_date_creacion2     				[19]byte
-	DD_file_date_modificacion2 				[19]byte
+	DD_file_date_creacion     				[19]byte
+	DD_file_date_modificacion 				[19]byte
 }
 
 /**
