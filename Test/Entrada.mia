@@ -109,4 +109,4 @@ dot -Tpng "/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e I
 dot -Tpng "/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Controlador/ReporteControlador/mbr.dot" -o "/home/jmorente/Documentos/MIA/holamundo.png"
 
 
-exec -path->"/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Test/MKFS.mia"
+exec -path->"/home/jmorente/Universidad de San Carlos de Guatemala/USAC Manejo e Implementación de Archivo/MIA-Proyecto-1/Test/Calificacion.mia"

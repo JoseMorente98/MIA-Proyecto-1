@@ -1,0 +1,43 @@
+digraph {
+
+  tbl [
+
+    shape=plaintext
+    label=<
+
+    <table border='1' cellborder='1'>
+            <tr><td>SB_nombre_hd</td><td>00000000</td></tr>
+            <tr><td>SB_arbol_virtual_count</td><td>00000000</td></tr>
+            <tr><td>SB_detalle_directorio_count</td><td>00000000</td></tr>
+            <tr><td>SB_inodos_count</td><td>00000000</td></tr>
+            <tr><td>SB_bloques_count</td><td>00000000</td></tr>
+            <tr><td>SB_arbol_virtual_free</td><td>00000000</td></tr>
+            <tr><td>SB_detalle_directorio_free</td><td>00000000</td></tr>
+            <tr><td>SB_inodos_free</td><td>00000000</td></tr>
+            <tr><td>SB_bloques_free</td><td>00000000</td></tr>
+            <tr><td>SB_date_creacion</td><td>00000000</td></tr>
+            <tr><td>SB_date_ultimo_montaje</td><td>00000000</td></tr>
+            <tr><td>SB_montaje_count</td><td>00000000</td></tr>
+            <tr><td>SB_ap_bitmap_arbol_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_ap_arbol_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_ap_bitmap_detalle_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_ap_detalle_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_ap_bitmap_tabla_inodo</td><td>00000000</td></tr>
+            <tr><td>SB_ap_tabla_inodo</td><td>00000000</td></tr>
+            <tr><td>SB_ap_bitmap_bloques</td><td>00000000</td></tr>
+            <tr><td>SB_ap_bloques</td><td>00000000</td></tr>
+            <tr><td>SB_ap_log</td><td>00000000</td></tr>
+            <tr><td>SB_size_struct_arbol_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_size_struct_detalle_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_size_struct_inodo</td><td>00000000</td></tr>
+            <tr><td>SB_size_struct_bloque</td><td>00000000</td></tr>
+            <tr><td>SB_free_first_bit_struct_arbol_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_free_first_bit_struct_detalle_directorio</td><td>00000000</td></tr>
+            <tr><td>SB_free_first_bit_struct_inodo</td><td>00000000</td></tr>
+            <tr><td>SB_free_first_bit_struct_bloque</td><td>00000000</td></tr>
+            <tr><td>SB_magic_num</td><td>00000000</td></tr>
+    </table>
+
+    >];
+
+}

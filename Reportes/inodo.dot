@@ -1,0 +1,92 @@
+digraph H {
+
+  parent [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="2">Inodo Archivo.txt</td></tr>
+       <tr>
+            <td>-1</td>
+            <td port='port1'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port2'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port3'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port4'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port5'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='inodo5'> </td>
+       </tr>
+     </table>
+  >];
+
+  child1 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="2">Inodo Archivo.txt</td></tr>
+       <tr>
+            <td>-1</td>
+            <td port='port1'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port2'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port3'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port4'> </td>
+       </tr>
+       <tr>
+            <td>-1</td>
+            <td port='port5'> </td>
+       </tr>
+     </table>
+  >];
+
+  bloque1 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='0'>
+       <tr><td>2</td></tr>
+     </table>
+  >];
+
+  bloque2 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='0'>
+       <tr><td>2</td></tr>
+     </table>
+  >];
+
+  bloque3 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='0'>
+       <tr><td>2</td></tr>
+     </table>
+  >];
+
+  parent:inodo5   -> child1;
+  parent:port1   -> bloque1;
+  parent:port2   -> bloque2;
+  parent:port3   -> bloque3;
+
+}

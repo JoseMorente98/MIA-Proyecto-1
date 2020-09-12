@@ -1,0 +1,60 @@
+digraph H {
+
+  parent [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="8">/</td></tr>
+       <tr>
+            <td port='port1'>-1</td>
+            <td port='port2'>-1</td>
+            <td port='port3'>-1</td>
+            <td port='port4'>-1</td>
+            <td port='port5'>-1</td>
+            <td port='port6'>-1</td>
+            <td port='port7'>-1</td>
+            <td port='port8'>-1</td>
+       </tr>
+     </table>
+  >];
+
+  child1 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="8">/</td></tr>
+       <tr>
+            <td port='port11'>-1</td>
+            <td port='port12'>-1</td>
+            <td port='port13'>-1</td>
+            <td port='port14'>-1</td>
+            <td port='port15'>-1</td>
+            <td port='port16'>-1</td>
+            <td port='port17'>-1</td>
+            <td port='port18'>-1</td>
+       </tr>
+     </table>
+  >];
+
+  child2 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="8">/</td></tr>
+       <tr>
+            <td port='port21'>-1</td>
+            <td port='port22'>-1</td>
+            <td port='port23'>-1</td>
+            <td port='port24'>-1</td>
+            <td port='port25'>-1</td>
+            <td port='port26'>-1</td>
+            <td port='port27'>-1</td>
+            <td port='port28'>-1</td>
+       </tr>
+     </table>
+  >];
+
+  parent:port1   -> child1;
+  parent:port2   -> child2;
+
+}

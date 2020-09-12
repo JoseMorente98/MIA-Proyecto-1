@@ -1,0 +1,43 @@
+digraph {
+
+  tbl [
+
+    shape=plaintext
+    label=<
+
+      <table >
+       <tr>
+          <td></td>
+          <td></td>
+          <td>Extendida</td>
+          <td></td>
+          <td></td>
+        </tr>
+        
+        <tr>
+          <td>MBR</td>
+          <td>Libre</td>
+          <td>
+            <table >
+                <tr>
+                <td>EBR</td>
+                <td>Lógica</td>
+                <td>EBR</td>
+                <td>Lógica</td>
+                <td>EBR</td>
+                <td>Lógica</td>
+                <td>EBR</td>
+                <td>Lógica</td>
+                </tr>
+                
+            </table>
+          </td>
+          <td>Libre</td>
+          <td>Libre</td>
+        </tr>
+        
+      </table>
+
+    >];
+
+}

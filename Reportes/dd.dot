@@ -1,0 +1,105 @@
+digraph H {
+
+  parent [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="3">DD</td></tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port1'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port2'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port3'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port4'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port5'> </td>
+       </tr>
+     </table>
+  >];
+
+  child1 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="3">DD</td></tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port1'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port2'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port3'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port4'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port5'> </td>
+       </tr>
+     </table>
+  >];
+
+  child2 [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='1'>
+       <tr><td colspan="3">DD</td></tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port1'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port2'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port3'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port4'> </td>
+       </tr>
+       <tr>
+            <td>Archivo.txt</td>
+            <td>-1</td>
+            <td port='port5'> </td>
+       </tr>
+     </table>
+  >];
+
+  parent:port1   -> child1;
+  parent:port2   -> child2;
+
+}
