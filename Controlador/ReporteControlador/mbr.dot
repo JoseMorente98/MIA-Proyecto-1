@@ -4,36 +4,36 @@ shape=plaintext
 label=<
 <table border='1' cellborder='1'>
 <tr><td>Name</td><td>Valor</td></tr>
-<tr><td>MBR Tamano</td><td>20971519</td></tr>
-<tr><td>MBR Fecha Creacion</td><td>2020-09-10 00:23:13</td></tr>
-<tr><td>MBR Disk Asignature</td><td>5577006791947779410</td></tr>
+<tr><td>MBR Tamano</td><td>3145727</td></tr>
+<tr><td>MBR Fecha Creacion</td><td>2020-09-12 23:16:13</td></tr>
+<tr><td>MBR Disk Asignature</td><td>4037200794235010051</td></tr>
 <tr><td>MBR Particion No. 1</td><td></td></tr>
 <tr><td>Status</td><td>T</td></tr>
 <tr><td>Type</td><td>P</td></tr>
 <tr><td>Fit</td><td>WF</td></tr>
 <tr><td>Start</td><td>21080</td></tr>
-<tr><td>Size</td><td>5242879</td></tr>
+<tr><td>Size</td><td>2097151</td></tr>
 <tr><td>Name</td><td>Particion1</td></tr>
 <tr><td>MBR Particion No. 2</td><td></td></tr>
 <tr><td>Status</td><td>T</td></tr>
-<tr><td>Type</td><td>P</td></tr>
-<tr><td>Fit</td><td>WF</td></tr>
-<tr><td>Start</td><td>5263959</td></tr>
-<tr><td>Size</td><td>5242879</td></tr>
+<tr><td>Type</td><td>E</td></tr>
+<tr><td>Fit</td><td>FF</td></tr>
+<tr><td>Start</td><td>2118231</td></tr>
+<tr><td>Size</td><td>409599</td></tr>
 <tr><td>Name</td><td>Particion2</td></tr>
 <tr><td>MBR Particion No. 3</td><td></td></tr>
 <tr><td>Status</td><td>T</td></tr>
 <tr><td>Type</td><td>P</td></tr>
-<tr><td>Fit</td><td>WF</td></tr>
-<tr><td>Start</td><td>10506838</td></tr>
-<tr><td>Size</td><td>5242879</td></tr>
+<tr><td>Fit</td><td>BF</td></tr>
+<tr><td>Start</td><td>2527830</td></tr>
+<tr><td>Size</td><td>204799</td></tr>
 <tr><td>Name</td><td>Particion3</td></tr>
 <tr><td>MBR Particion No. 4</td><td></td></tr>
 <tr><td>Status</td><td>T</td></tr>
 <tr><td>Type</td><td>P</td></tr>
-<tr><td>Fit</td><td>WF</td></tr>
-<tr><td>Start</td><td>15749717</td></tr>
-<tr><td>Size</td><td>4194303</td></tr>
+<tr><td>Fit</td><td>BF</td></tr>
+<tr><td>Start</td><td>2732629</td></tr>
+<tr><td>Size</td><td>245759</td></tr>
 <tr><td>Name</td><td>Particion4</td></tr>
 </table>
 >];}

@@ -868,10 +868,14 @@ func EliminarParticion(path string, name string)  {
 		informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
 	}
 
+	color.Cyan("NO ENCONTRE PARTICIONES NORMALES")
 	for i := 0; i < 50; i++ {
 		if (m.Mbr_partition_1.Part_EBR[i] != Modelo.EBR{}) {
+			color.Cyan(string(particion.Part_name[:]))
+			color.Cyan(string(m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]))
+
 			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
-				if(m.Mbr_partition_1.Part_EBR[i].Part_logica == Modelo.PARTICION_LOGICA{}) {
+				if(m.Mbr_partition_1.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
 					m.Mbr_partition_1.Part_size_disponible = m.Mbr_partition_1.Part_size_disponible + m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_size;
 					m.Mbr_partition_1.Part_EBR[i].Part_logica = Modelo.PARTICION_LOGICA{};
 					color.Green("╔══════════════════════════════════════════════════╗")
@@ -887,7 +891,7 @@ func EliminarParticion(path string, name string)  {
 	for i := 0; i < 50; i++ {
 		if (m.Mbr_partition_2.Part_EBR[i] != Modelo.EBR{}) {
 			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
-				if(m.Mbr_partition_2.Part_EBR[i].Part_logica == Modelo.PARTICION_LOGICA{}) {
+				if(m.Mbr_partition_2.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
 					m.Mbr_partition_2.Part_size_disponible = m.Mbr_partition_2.Part_size_disponible + m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_size;
 					m.Mbr_partition_2.Part_EBR[i].Part_logica = Modelo.PARTICION_LOGICA{};
 					color.Green("╔══════════════════════════════════════════════════╗")
@@ -903,7 +907,7 @@ func EliminarParticion(path string, name string)  {
 	for i := 0; i < 50; i++ {
 		if (m.Mbr_partition_3.Part_EBR[i] != Modelo.EBR{}) {
 			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
-				if(m.Mbr_partition_3.Part_EBR[i].Part_logica == Modelo.PARTICION_LOGICA{}) {
+				if(m.Mbr_partition_3.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
 					m.Mbr_partition_3.Part_size_disponible = m.Mbr_partition_3.Part_size_disponible + m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_size;
 					m.Mbr_partition_3.Part_EBR[i].Part_logica = Modelo.PARTICION_LOGICA{};
 					color.Green("╔══════════════════════════════════════════════════╗")
@@ -919,7 +923,7 @@ func EliminarParticion(path string, name string)  {
 	for i := 0; i < 50; i++ {
 		if (m.Mbr_partition_4.Part_EBR[i] != Modelo.EBR{}) {
 			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
-				if(m.Mbr_partition_3.Part_EBR[i].Part_logica == Modelo.PARTICION_LOGICA{}) {
+				if(m.Mbr_partition_4.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
 					m.Mbr_partition_4.Part_size_disponible = m.Mbr_partition_4.Part_size_disponible + m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_size;
 					m.Mbr_partition_4.Part_EBR[i].Part_logica = Modelo.PARTICION_LOGICA{};
 					color.Green("╔══════════════════════════════════════════════════╗")

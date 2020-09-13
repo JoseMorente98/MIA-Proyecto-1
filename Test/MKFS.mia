@@ -27,3 +27,6 @@ mount
 pause
 
 mkfs -id->vda1
+/home/jmorente/Documentos/Universidad de San Carlos de Guatemala/USAC Semestre VI/USAC Manejo e Implementacion de Archivos/MIA-Proyecto-1/Test/Entrada1.mia
+exec -path->"/home/jmorente/Descargas/Entrada1.mia" 
+exec -path->"/home/jmorente/Documentos/Universidad de San Carlos de Guatemala/USAC Semestre VI/USAC Manejo e Implementacion de Archivos/MIA-Proyecto-1/Test/Entrada1.mia" 

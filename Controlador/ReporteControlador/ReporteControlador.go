@@ -194,6 +194,11 @@ func MBR(ubicacion string, strPath string)  {
 	var strUrl2 = strPath
 
 	executeCommand(strUrl, strUrl2);
+
+	color.Blue("╔══════════════════════════════════════════════════╗")
+	color.Blue("               REPORTE MBR GENERADO :D")
+	color.Blue(" PATH: " + strPath)
+	color.Blue("╚══════════════════════════════════════════════════╝")
 }
 
 /**

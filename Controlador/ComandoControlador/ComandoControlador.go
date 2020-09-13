@@ -320,7 +320,7 @@ func ComandoRMDISK(strComando []string) {
 			removerComilla := strings.Replace(arregloComando[1], "\"", "", contadorComilla)
 			removerIgual := strings.Replace(removerComilla, "=", " ", contadorIgual)
 			path = removerIgual
-		case "-nombre":
+		case "-name":
 			nombre = arregloComando[1]
 		}
 	}
