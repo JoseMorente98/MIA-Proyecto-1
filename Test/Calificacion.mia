@@ -6,16 +6,16 @@ Mkdisk -size->100 -path->"/home/mis discos/"\*
  -NaMe->Disco2.dsk -unit->k
 Mkdisk -size->10 -path->"/home/mis discos/"\*
  -NaMe->Disco3.dsk
-Mkdisk -size->50 \*
+Mkdisk -size->25 \*
 -path->"/home/mis discos/" \*
 -NaMe->Disco4.dsk -unit->k #COMENTARIO
 
-Mkdisk -size->50 \*
+Mkdisk -size->25 \*
 -path->"/home/mis discos/201801237/" \*
 -NaMe->Disco4.dsk -unit->k #COMENTARIO
 
 
-Mkdisk -size->50 \*
+Mkdisk -size->25 \*
 -path->"/home/mis discos/201801237/201801275/" \*
 -NaMe->Disco4.dsk -unit->k #COMENTARIO
 

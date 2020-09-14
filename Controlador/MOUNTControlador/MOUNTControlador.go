@@ -100,7 +100,7 @@ func AgregarMontaje(path string, name string)  {
 			}
 		}
 
-		for i := 0; i < 50; i++ {
+		for i := 0; i < 25; i++ {
 			//color.Red(string(nombre[:]) + " -> " + string(m.Mbr_partition_1.Part_EBR[i].Part_name[:]))
 			if (bytes.Compare(nombre[:], m.Mbr_partition_1.Part_EBR[i].Part_name[:]) == 0) {
 				AgregarMontajeDDPL(path, name, m.Mbr_partition_1.Part_EBR[i].Part_logica);
@@ -108,7 +108,7 @@ func AgregarMontaje(path string, name string)  {
 			}
 		}
 
-		for i := 0; i < 50; i++ {
+		for i := 0; i < 25; i++ {
 			//color.Red(string(nombre[:]) + " -> " + string(m.Mbr_partition_2.Part_EBR[i].Part_name[:]))
 			if (bytes.Compare(nombre[:], m.Mbr_partition_2.Part_EBR[i].Part_name[:]) == 0) {
 				AgregarMontajeDDPL(path, name, m.Mbr_partition_2.Part_EBR[i].Part_logica);
@@ -116,7 +116,7 @@ func AgregarMontaje(path string, name string)  {
 			}
 		}
 
-		for i := 0; i < 50; i++ {
+		for i := 0; i < 25; i++ {
 			//color.Red(string(nombre[:]) + " -> " + string(m.Mbr_partition_3.Part_EBR[i].Part_name[:]))
 			if (bytes.Compare(nombre[:], m.Mbr_partition_3.Part_EBR[i].Part_name[:]) == 0) {
 				AgregarMontajeDDPL(path, name, m.Mbr_partition_3.Part_EBR[i].Part_logica);
@@ -124,7 +124,7 @@ func AgregarMontaje(path string, name string)  {
 			}
 		}
 
-		for i := 0; i < 50; i++ {
+		for i := 0; i < 25; i++ {
 			//color.Red(string(nombre[:]) + " -> " + string(m.Mbr_partition_4.Part_EBR[i].Part_name[:]))
 			if (bytes.Compare(nombre[:], m.Mbr_partition_4.Part_EBR[i].Part_name[:]) == 0) {
 				AgregarMontajeDDPL(path, name, m.Mbr_partition_4.Part_EBR[i].Part_logica);

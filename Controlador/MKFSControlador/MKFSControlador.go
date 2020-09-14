@@ -437,7 +437,7 @@ func Particion(particion Modelo.PARTICION, file *os.File, nombre string)  {
 	escrituraBytes(file, binaryTemp6.Bytes())
 
 	//INICIO DE BITMAP BLOQUE
-	file.Seek(SBDIR.SB_ap_bloques, 0)
+	file.Seek(SBDIR.SB_ap_bitmap_bloques, 0)
 	var unidad4 int8 = '1'
 	s4 := &unidad4
 	var binarytemp7 bytes.Buffer

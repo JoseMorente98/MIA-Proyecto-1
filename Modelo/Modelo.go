@@ -29,7 +29,7 @@ type PARTICION struct {
 	Part_size				int64
 	Part_size_disponible	int64
 	Part_name				[16]byte
-	Part_EBR				[50]EBR
+	Part_EBR				[25]EBR
 }
 
 /**

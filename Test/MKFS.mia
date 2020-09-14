@@ -1,7 +1,7 @@
 Mkdisk -size->20 -path->"/home/mis discos/" -NaMe->Disco1.dsk
 Mkdisk -size->100 -path->"/home/mis discos/" -NaMe->Disco2.dsk -unit->k
 Mkdisk -size->10 -path->"/home/mis discos/" -NaMe->Disco3.dsk
-Mkdisk -size->50 -path->"/home/mis discos/" -NaMe->Disco4.dsk -unit->k
+Mkdisk -size->25 -path->"/home/mis discos/" -NaMe->Disco4.dsk -unit->k
 
 pause
 
@@ -30,3 +30,5 @@ mkfs -id->vda1
 /home/jmorente/Documentos/Universidad de San Carlos de Guatemala/USAC Semestre VI/USAC Manejo e Implementacion de Archivos/MIA-Proyecto-1/Test/Entrada1.mia
 exec -path->"/home/jmorente/Descargas/Entrada1.mia" 
 exec -path->"/home/jmorente/Documentos/Universidad de San Carlos de Guatemala/USAC Semestre VI/USAC Manejo e Implementacion de Archivos/MIA-Proyecto-1/Test/Entrada1.mia" 
+exec -path->"/home/jmorente/Documentos/Universidad de San Carlos de Guatemala/USAC Semestre VI/USAC Manejo e Implementacion de Archivos/MIA-Proyecto-1/Test/Entrada12.mia" 
+exec -path->"/home/jmorente/Documentos/Universidad de San Carlos de Guatemala/USAC Semestre VI/USAC Manejo e Implementacion de Archivos/MIA-Proyecto-1/Test/Final.mia" 

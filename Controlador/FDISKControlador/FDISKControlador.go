@@ -17,13 +17,21 @@ import (
 func FDISK(size string, path string, name string, unit string, types string, fit string, add string, delete string)  {
 	if delete != "" {
 		if path != "" && name != "" {
-			if strings.ToLower(delete) == "fast" || strings.ToLower(delete) == "full" {
-				//delete = strings.ToUpper(delete);
-				EliminarParticion(path, name);
-			} else {
+			file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, os.ModeAppend)
+			defer file.Close()
+			if err != nil {
 				color.Red("╔══════════════════════════════════════════════════╗")
-				color.Red("           DELETE solo admite FAST, FULL D:")
+				color.Red("         No se encuentra el disco D:")
 				color.Red("╚══════════════════════════════════════════════════╝")
+			} else {
+				if strings.ToLower(delete) == "fast" || strings.ToLower(delete) == "full" {
+					//delete = strings.ToUpper(delete);
+					EliminarParticion(path, name);
+				} else {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("           DELETE solo admite FAST, FULL D:")
+					color.Red("╚══════════════════════════════════════════════════╝")
+				}
 			}
 		} else {
 			color.Red("╔══════════════════════════════════════════════════╗")
@@ -293,7 +301,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 						copy(particionEBR.Part_fit[:], fit)
 						particionEBR.Part_size = sizeDisk;
 						particionEBR.Part_status = 'T';
-						particionEBR.Part_start = int64(size);
+						particionEBR.Part_start = m.Mbr_partition_1.Part_end;
 						particionEBR.Part_end = particion.Part_start + sizeDisk;
 						particionEBR.Part_next = -1;
 						particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
@@ -341,7 +349,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 						copy(particionEBR.Part_fit[:], fit)
 						particionEBR.Part_size = sizeDisk;
 						particionEBR.Part_status = 'T';
-						particionEBR.Part_start = int64(size);
+						particionEBR.Part_start = m.Mbr_partition_2.Part_end;
 						particionEBR.Part_end = particion.Part_start + sizeDisk;
 						particionEBR.Part_next = -1;
 						particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
@@ -391,7 +399,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 						copy(particionEBR.Part_fit[:], fit)
 						particionEBR.Part_size = sizeDisk;
 						particionEBR.Part_status = 'T';
-						particionEBR.Part_start = int64(size);
+						particionEBR.Part_start = m.Mbr_partition_3.Part_end;
 						particionEBR.Part_end = particion.Part_start + sizeDisk;
 						particionEBR.Part_next = -1;
 						particionEBR.Part_logica = Modelo.PARTICION_LOGICA{};
@@ -439,7 +447,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					//color.Red(string(m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]));
 					//color.Red(string(nombre[:]));
 					if bytes.Compare(nombre[:], m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
@@ -450,7 +458,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_1.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
@@ -470,7 +478,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 						if(m.Mbr_partition_1.Part_EBR[i] == Modelo.EBR{}) {
 							if (sizeDisk < m.Mbr_partition_1.Part_size_disponible) {
 								m.Mbr_partition_1.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[i-1].Part_end);
-								m.Mbr_partition_1.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[0].Part_end);
+								m.Mbr_partition_1.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_1.Part_EBR[i-1].Part_end);
 								m.Mbr_partition_1.Part_size_disponible = m.Mbr_partition_1.Part_size_disponible - sizeDisk;
 								break;
 							} else {
@@ -493,7 +501,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					if bytes.Compare(nombre[:], m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
 						color.Cyan("╔══════════════════════════════════════════════════╗")
 						color.Cyan("   El nombre de partición ya existe en el disco D:")
@@ -502,7 +510,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_2.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
@@ -522,7 +530,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 						if(m.Mbr_partition_2.Part_EBR[i] == Modelo.EBR{}) {
 							if (sizeDisk < m.Mbr_partition_2.Part_size_disponible) {
 								m.Mbr_partition_2.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[i-1].Part_end);
-								m.Mbr_partition_2.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[0].Part_end);
+								m.Mbr_partition_2.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_2.Part_EBR[i-1].Part_end);
 								m.Mbr_partition_2.Part_size_disponible = m.Mbr_partition_2.Part_size_disponible - sizeDisk;
 								break;
 							} else {
@@ -545,7 +553,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					//color.Red(string(m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_name[:]));
 					//color.Red(string(nombre[:]));
 					if bytes.Compare(nombre[:], m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
@@ -556,7 +564,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_3.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
@@ -576,7 +584,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 						if(m.Mbr_partition_3.Part_EBR[i] == Modelo.EBR{}) {
 							if (sizeDisk < m.Mbr_partition_3.Part_size_disponible) {
 								m.Mbr_partition_3.Part_EBR[i] = crearParticionEBR(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[i-1].Part_end);
-								m.Mbr_partition_3.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[0].Part_end);
+								m.Mbr_partition_3.Part_EBR[i].Part_logica = crearParticionLogica(name, types, fit, sizeDisk, m.Mbr_partition_3.Part_EBR[i-1].Part_end);
 								m.Mbr_partition_3.Part_size_disponible = m.Mbr_partition_3.Part_size_disponible - sizeDisk;
 								break;
 							} else {
@@ -599,7 +607,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					color.Red("╚══════════════════════════════════════════════════╝")
 					return;
 				} 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					//color.Red(string(m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_name[:]));
 					//color.Red(string(nombre[:]));
 					if bytes.Compare(nombre[:], m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
@@ -610,7 +618,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 					}
 				}
 
-				for i := 0; i < 50; i++ {
+				for i := 0; i < 25; i++ {
 					if(i == 0) {
 						if(m.Mbr_partition_4.Part_EBR[0].Part_logica == Modelo.PARTICION_LOGICA{}) {
 							//CREAR PARTICION LOGICA
@@ -869,7 +877,7 @@ func EliminarParticion(path string, name string)  {
 	}
 
 	color.Cyan("NO ENCONTRE PARTICIONES NORMALES")
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 25; i++ {
 		if (m.Mbr_partition_1.Part_EBR[i] != Modelo.EBR{}) {
 			color.Cyan(string(particion.Part_name[:]))
 			color.Cyan(string(m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]))
@@ -888,7 +896,7 @@ func EliminarParticion(path string, name string)  {
 		}		
 	}
 	
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 25; i++ {
 		if (m.Mbr_partition_2.Part_EBR[i] != Modelo.EBR{}) {
 			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
 				if(m.Mbr_partition_2.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
@@ -904,7 +912,7 @@ func EliminarParticion(path string, name string)  {
 		}		
 	}
 
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 25; i++ {
 		if (m.Mbr_partition_3.Part_EBR[i] != Modelo.EBR{}) {
 			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
 				if(m.Mbr_partition_3.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
@@ -920,7 +928,7 @@ func EliminarParticion(path string, name string)  {
 		}		
 	}
 
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 25; i++ {
 		if (m.Mbr_partition_4.Part_EBR[i] != Modelo.EBR{}) {
 			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
 				if(m.Mbr_partition_4.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {

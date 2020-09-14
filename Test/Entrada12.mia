@@ -1,4 +1,3 @@
-
 Mkdisk -Size->3000 -unit->K -path->"/home/disco Espacio/" -name->Disco1.dsk
 Mkdisk -Size->3000 -unit->K -path->/home/Disco/ -name->Disco2.dsk
 Mkdisk -Size->2 -unit->M -path->"/home/disco Espacio/disco4/" -name->Disco4.dsk
@@ -24,47 +23,33 @@ Pause
 
 
 fdisk -Size->2 -path->/home/Prueba/Disco1.dsk -unit->M -name->Particion1
-pause
 
 #error aun no se ha creado ninguna particion extendida
 fdisk -path->/home/Prueba/Disco1.dsk -name->Logica1 -type->L -unit->B -add->100
-pause
 
 fdisk -Size->400 -path->/home/Prueba/Disco1.dsk -unit->K -type->E -fit->FF -name->Particion2
 fdisk -Size->200 -path->/home/Prueba/Disco1.dsk -unit->K -fit->BF -name->Particion3
-pause
 
 
 
 #error ya existe una partcion extendida
 fdisk -Size->100 -path->/home/Prueba/Disco1.dsk -unit->K -type->E -fit->FF -name->Particion0
 
-pause
 
 fdisk -Size->240 -path->/home/Prueba/Disco1.dsk -type->P -fit->BF -unit->K -name->Particion4
-pause
 
 #error ya existe 4 particiones dentro del disco
 fdisk -Size->40 -path->/home/Prueba/Disco1.dsk -type->P -fit->BF -unit->K -name->Particion14
-pause
 
 
 #creando logicas
 fdisk -type->L -unit->K -name->Part5 -size->25 -path->/home/Prueba/Disco1.dsk -fit->BF
-pause
-
 fdisk -type->L -unit->K -name->Part6 -size->25 -path->/home/Prueba/Disco1.dsk -fit->BF
-pause
-
 fdisk -type->L -unit->K -name->Part7 -size->40 -path->/home/Prueba/Disco1.dsk -fit->BF
-pause
-
 fdisk -type->L -unit->K -name->Part8 -size->80 -path->/home/Prueba/Disco1.dsk -fit->BF
 
-pause
 
 mount -path->/home/Prueba/Disco1.dsk -name->Particion1 #id->vda1
-pause
 
 
 rep -id->vda1 -Path->/home/Prueba/reporteDisk1.png -name->disk
@@ -78,29 +63,22 @@ fdisk -delete->full -name->Particion3 -path->/home/Prueba/Disco1.dsk
 
 # elimina una logica
 fdisk -delete->fast -name->Part7 -path->/home/Prueba/Disco1.dsk
-pause
 
 mount -path->/home/Prueba/Disco1.dsk -name->Particion2 #id->vda2
-pause
 
 #error ya no existe la particion
 mount -path->/home/Prueba/Disco1.dsk -name->Particion3 
-pause
 
 mount -path->/home/Prueba/Disco1.dsk -name->Particion4 #id->vda3
 mount -path->/home/Prueba/Disco1.dsk -name->Particion2 #id->vda4
-pause
 
 #error la particion ya esta montada
 mount -path->/home/Prueba/Disco1.dsk -name->Particion4 
 #monta una logica
 mount -path->/home/Prueba/Disco1.dsk -name->Part6 #id->vda5
-pause
-
 #error no existe el disco
 mount -path->/home/Prueba/Disco2.dsk -name->Particion3
 mount -path->/home/Prueba/Disco2.dsk -name->Particion4 
-pause
 
 
 rep -id->vda4 -Path->/home/Prueba/reporteDisk2.png -name->disk
@@ -110,17 +88,11 @@ pause
 
 #elimina la extendida
 fdisk -delete->fast -name->Particion2 -path->/home/Prueba/Disco1.dsk
-pause
 
 rep -id->vda4 -Path->/home/Prueba/reporteDisk3.png -name->disk
 rep -id->vda4 -Path->/home/Prueba/reporteMBR3.png -name->mbr
-pause
 
 mount
 pause
 unmount -id1->vda4
 mount
-
-
-
-
