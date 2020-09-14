@@ -5,14 +5,14 @@ label=<
 <table border='1' cellborder='1'>
 <tr><td>Name</td><td>Valor</td></tr>
 <tr><td>MBR Tamano</td><td>2097151</td></tr>
-<tr><td>MBR Fecha Creacion</td><td>2020-09-13 18:28:37</td></tr>
-<tr><td>MBR Disk Asignature</td><td>3916589616287113937</td></tr>
+<tr><td>MBR Fecha Creacion</td><td>2020-09-13 21:41:27</td></tr>
+<tr><td>MBR Disk Asignature</td><td>2775422040480279449</td></tr>
 <tr><td>MBR Particion No. 1</td><td></td></tr>
 <tr><td>Status</td><td>T</td></tr>
 <tr><td>Type</td><td>P</td></tr>
 <tr><td>Fit</td><td>WF</td></tr>
 <tr><td>Start</td><td>10680</td></tr>
-<tr><td>Size</td><td>1048575</td></tr>
+<tr><td>Size</td><td>1048674</td></tr>
 <tr><td>Name</td><td>Particion1</td></tr>
 <tr><td>MBR Particion No. 2</td><td></td></tr>
 <tr><td>Status</td><td>T</td></tr>

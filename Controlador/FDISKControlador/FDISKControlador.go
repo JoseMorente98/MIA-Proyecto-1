@@ -41,6 +41,44 @@ func FDISK(size string, path string, name string, unit string, types string, fit
 		return;
 	}
 
+	if add != "" {
+		if path != "" && name != "" {
+			file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, os.ModeAppend)
+			defer file.Close()
+			if err != nil {
+				color.Red("╔══════════════════════════════════════════════════╗")
+				color.Red("         No se encuentra el disco D:")
+				color.Red("╚══════════════════════════════════════════════════╝")
+			} else {
+				if unit != "" {
+					if strings.ToLower(unit) == "b" || strings.ToLower(unit) == "k" || strings.ToLower(unit) == "m" {
+						unit = strings.ToUpper(unit);
+					} else {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("           UNIT solo admite B, K o M D:")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					}
+				} else {
+					unit = "K"
+				}
+				s := add
+				n, err := strconv.ParseInt(s, 10, 64)
+				if err != nil {
+					color.Red("╔══════════════════════════════════════════════════╗")
+					color.Red("      No se puede convertir string a int64 D:")
+					color.Red("╚══════════════════════════════════════════════════╝")
+				}
+				//AGREGAR O QUITAR ESPACIO
+				AddEspacio(name, unit, path, n)
+			}
+		} else {
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("      Verificar parametros obligatorios D:")
+			color.Red("╚══════════════════════════════════════════════════╝")
+		}
+		return;
+	}
+
 	if size != "" && path != "" && name != "" {
 		file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, os.ModeAppend)
 		defer file.Close()
@@ -659,11 +697,7 @@ func readFile(name string, path string, types string, fit string, sizeDisk int64
 		}
 		
 	}
-	//fmt.Println(m)
-
-	//Se situa en la posicion 0,0 del archivo
 	file.Seek(0, 0)
-	//Escribe el mbr con particiones en el archivo
 	s1 := &m
 	var binario3 bytes.Buffer
 	binary.Write(&binario3, binary.BigEndian, s1)
@@ -876,7 +910,7 @@ func EliminarParticion(path string, name string)  {
 		informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
 	}
 
-	color.Cyan("NO ENCONTRE PARTICIONES NORMALES")
+	//color.Cyan("NO ENCONTRE PARTICIONES NORMALES")
 	for i := 0; i < 25; i++ {
 		if (m.Mbr_partition_1.Part_EBR[i] != Modelo.EBR{}) {
 			color.Cyan(string(particion.Part_name[:]))
@@ -938,6 +972,218 @@ func EliminarParticion(path string, name string)  {
 					color.Green("            Partición Lógica ELiminada ")
 					color.Green("╚══════════════════════════════════════════════════╝")
 					informacionEXT(strconv.FormatInt(m.Mbr_partition_4.Part_size, 10), strconv.FormatInt(m.Mbr_partition_4.Part_size_disponible, 10))
+					return;
+				}
+			}
+		}		
+	}
+	
+	file.Seek(0, 0)
+	//Escribe el mbr con particiones en el archivo
+	s1 := &m
+	var binario3 bytes.Buffer
+	binary.Write(&binario3, binary.BigEndian, s1)
+	escrituraBytes(file, binario3.Bytes())
+
+}
+
+func AddEspacio(name string, unit string, path string, add int64)  {
+	var sizeUNIT int64;
+	switch strings.ToLower(unit) {
+	case "b":
+		sizeUNIT = 1;
+	case "k":
+		sizeUNIT = 1024;
+	case "m":
+		sizeUNIT = 1024 * 1024;
+	default:
+		sizeUNIT = 1024;
+	}
+	add = sizeUNIT * add - 1;
+
+	AgregarEspacio(path, name, add)
+}
+
+
+/**
+ * ELIMINAR PARTICION 
+ */
+ func AgregarEspacio(path string, name string, add int64)  {
+	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, os.ModeAppend)
+	defer file.Close() 
+	//VALIDAR QUE EXISTA EL DISCO
+	if err != nil { 
+		log.Fatal(err)
+		color.Red("╔══════════════════════════════════════════════════╗")
+		color.Red("         No se encuentra el disco D:")
+		color.Red("╚══════════════════════════════════════════════════╝")
+	}
+
+	//DECLARAR MBR Y OBTENER TAMAÑO
+	m := Modelo.MBR{}
+	var size int = int(unsafe.Sizeof(m))
+	
+	//LEER CANTIDAD DE BYTES
+	data := leerBytes(file, size)
+	//DECODIFICACION EN BINARIO
+	buffer := bytes.NewBuffer(data)
+	
+	//GUARDAR VARIABLE EN M
+	err = binary.Read(buffer, binary.BigEndian, &m)
+	if err != nil {
+		log.Fatal("binary.Read failed", err)
+	}
+
+	particion := Modelo.PARTICION{};
+	copy(particion.Part_name[:], name)
+	if bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_name[:]) == 0 {
+		if m.Mbr_size_disponible >= add {
+			m.Mbr_size_disponible = m.Mbr_size_disponible + m.Mbr_partition_1.Part_size + add;
+			m.Mbr_partition_1.Part_size = m.Mbr_partition_1.Part_size + add;
+			color.Green("╔══════════════════════════════════════════════════╗")
+			color.Green("              Espacio Actualizado :D ")
+			color.Green("╚══════════════════════════════════════════════════╝")
+			informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+		} else {
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("        Ya no queda espacio disponible D: ")
+			color.Red("╚══════════════════════════════════════════════════╝")
+		}
+	} else if bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_name[:]) == 0 {
+		if m.Mbr_size_disponible >= add {
+			m.Mbr_size_disponible = m.Mbr_size_disponible + m.Mbr_partition_2.Part_size + add;
+			m.Mbr_partition_2.Part_size = m.Mbr_partition_2.Part_size + add;
+			color.Green("╔══════════════════════════════════════════════════╗")
+			color.Green("              Espacio Actualizado :D ")
+			color.Green("╚══════════════════════════════════════════════════╝")
+			informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+		} else {
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("        Ya no queda espacio disponible D: ")
+			color.Red("╚══════════════════════════════════════════════════╝")
+		}
+	} else if bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_name[:]) == 0 {
+		if m.Mbr_size_disponible >= add {
+			m.Mbr_size_disponible = m.Mbr_size_disponible + m.Mbr_partition_3.Part_size + add;
+			m.Mbr_partition_3.Part_size = m.Mbr_partition_3.Part_size + add;
+			color.Green("╔══════════════════════════════════════════════════╗")
+			color.Green("              Espacio Actualizado :D ")
+			color.Green("╚══════════════════════════════════════════════════╝")
+			informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+		} else {
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("        Ya no queda espacio disponible D: ")
+			color.Red("╚══════════════════════════════════════════════════╝")
+		}
+	} else if bytes.Compare(particion.Part_name[:], m.Mbr_partition_4.Part_name[:]) == 0 {
+		if m.Mbr_size_disponible >= add {
+			m.Mbr_size_disponible = m.Mbr_size_disponible + m.Mbr_partition_4.Part_size + add;
+			m.Mbr_partition_4.Part_size = m.Mbr_partition_4.Part_size + add;
+			color.Green("╔══════════════════════════════════════════════════╗")
+			color.Green("              Espacio Actualizado :D ")
+			color.Green("╚══════════════════════════════════════════════════╝")
+			informacionMBR(strconv.FormatInt(m.Mbr_size, 10), strconv.FormatInt(m.Mbr_size_disponible, 10))
+		} else {
+			color.Red("╔══════════════════════════════════════════════════╗")
+			color.Red("        Ya no queda espacio disponible D: ")
+			color.Red("╚══════════════════════════════════════════════════╝")
+		}
+	}
+
+	//color.Cyan("NO ENCONTRE PARTICIONES NORMALES")
+	for i := 0; i < 25; i++ {
+		if (m.Mbr_partition_1.Part_EBR[i] != Modelo.EBR{}) {
+			color.Cyan(string(particion.Part_name[:]))
+			color.Cyan(string(m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]))
+
+			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
+				if(m.Mbr_partition_1.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
+					if m.Mbr_partition_1.Part_size_disponible >= add  {
+						m.Mbr_partition_1.Part_size_disponible =
+						m.Mbr_partition_1.Part_size_disponible + add;
+						m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_size = 
+						m.Mbr_partition_1.Part_EBR[i].Part_logica.Part_size + add;
+						color.Green("╔══════════════════════════════════════════════════╗")
+						color.Green("           Espacio Actualizado Logico :D ")
+						color.Green("╚══════════════════════════════════════════════════╝")
+						informacionEXT(strconv.FormatInt(m.Mbr_partition_1.Part_size, 10), strconv.FormatInt(m.Mbr_partition_1.Part_size_disponible, 10))
+					} else {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("        Ya no queda espacio disponible D: ")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					}
+					return;
+				}				
+			}
+		}		
+	}
+	
+	for i := 0; i < 25; i++ {
+		if (m.Mbr_partition_2.Part_EBR[i] != Modelo.EBR{}) {
+			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
+				if(m.Mbr_partition_2.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
+					if m.Mbr_partition_2.Part_size_disponible >= add  {
+						m.Mbr_partition_2.Part_size_disponible =
+						m.Mbr_partition_2.Part_size_disponible + add;
+						m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_size = 
+						m.Mbr_partition_2.Part_EBR[i].Part_logica.Part_size + add;
+						color.Green("╔══════════════════════════════════════════════════╗")
+						color.Green("           Espacio Actualizado Logico :D ")
+						color.Green("╚══════════════════════════════════════════════════╝")
+						informacionEXT(strconv.FormatInt(m.Mbr_partition_2.Part_size, 10), strconv.FormatInt(m.Mbr_partition_2.Part_size_disponible, 10))
+					} else {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("        Ya no queda espacio disponible D: ")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					}
+					return;
+				}
+			}
+		}		
+	}
+
+	for i := 0; i < 25; i++ {
+		if (m.Mbr_partition_3.Part_EBR[i] != Modelo.EBR{}) {
+			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
+				if(m.Mbr_partition_3.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
+					if m.Mbr_partition_3.Part_size_disponible >= add  {
+						m.Mbr_partition_3.Part_size_disponible =
+						m.Mbr_partition_3.Part_size_disponible + add;
+						m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_size = 
+						m.Mbr_partition_3.Part_EBR[i].Part_logica.Part_size + add;
+						color.Green("╔══════════════════════════════════════════════════╗")
+						color.Green("           Espacio Actualizado Logico :D ")
+						color.Green("╚══════════════════════════════════════════════════╝")
+						informacionEXT(strconv.FormatInt(m.Mbr_partition_3.Part_size, 10), strconv.FormatInt(m.Mbr_partition_3.Part_size_disponible, 10))
+					} else {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("        Ya no queda espacio disponible D: ")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					}
+					return;
+				}
+			}
+		}		
+	}
+
+	for i := 0; i < 25; i++ {
+		if (m.Mbr_partition_4.Part_EBR[i] != Modelo.EBR{}) {
+			if bytes.Compare(particion.Part_name[:], m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_name[:]) == 0 {
+				if(m.Mbr_partition_4.Part_EBR[i].Part_logica != Modelo.PARTICION_LOGICA{}) {
+					if m.Mbr_partition_4.Part_size_disponible >= add  {
+						m.Mbr_partition_4.Part_size_disponible =
+						m.Mbr_partition_4.Part_size_disponible + add;
+						m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_size = 
+						m.Mbr_partition_4.Part_EBR[i].Part_logica.Part_size + add;
+						color.Green("╔══════════════════════════════════════════════════╗")
+						color.Green("           Espacio Actualizado Logico :D ")
+						color.Green("╚══════════════════════════════════════════════════╝")
+						informacionEXT(strconv.FormatInt(m.Mbr_partition_4.Part_size, 10), strconv.FormatInt(m.Mbr_partition_4.Part_size_disponible, 10))
+					} else {
+						color.Red("╔══════════════════════════════════════════════════╗")
+						color.Red("        Ya no queda espacio disponible D: ")
+						color.Red("╚══════════════════════════════════════════════════╝")
+					}
 					return;
 				}
 			}

@@ -1,3 +1,3 @@
 digraph {tbl [ shape=plaintext label=< <table>
-<tr><td></td><td></td><td>Particion Extendida  - 204799</td><td></td><td></td><td></td></tr><tr><td>MBR</td><td>Particion I - 1048575</td><td><table ><tr><td>EBR</td><td>Partición: Part5</td><td>EBR</td><td>Partición: Part6</td></tr></table></td><td>Particion III - 409599</td><td>Particion IV - 204799</td><td>Disponible - 229379</td></tr></table>
+<tr><td></td><td></td><td>Particion Extendida  - 204799</td><td></td><td></td><td></td></tr><tr><td>MBR</td><td>Particion I - 1048674</td><td><table ><tr><td>EBR</td><td>Partición: Part5</td><td>EBR</td><td>Partición: Part6</td></tr></table></td><td>Particion III - 409599</td><td>Particion IV - 204799</td><td>Disponible - 1278053</td></tr></table>
 >];}
